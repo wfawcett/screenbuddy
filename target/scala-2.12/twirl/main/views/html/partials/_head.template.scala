@@ -38,7 +38,7 @@ Seq[Any](format.raw/*1.17*/(""";
 
     <!-- Bootstrap core CSS -->
 <link rel="stylesheet" media="screen" href="/assets/stylesheets/bootstrap.min.css">
-<link rel="shortcut icon" type="image/png" href="/assets/images/favicon.png">
+<link rel="shortcut icon" type="image/png" href="/assets/images/favicon.ico">
 
     <!-- Custom styles for this template -->
 <link rel="stylesheet" media="screen" href="/assets/stylesheets/jumbotron.css">"""))
@@ -57,9 +57,9 @@ Seq[Any](format.raw/*1.17*/(""";
 
               /*
                   -- GENERATED --
-                  DATE: Sat Sep 16 15:46:24 MDT 2017
+                  DATE: Sat Sep 16 16:23:40 MDT 2017
                   SOURCE: C:/workspace/screenbuddy/app/views/partials/_head.scala.html
-                  HASH: 8f1d284c26aead0790cd3a07e93a36ff68f48a9d
+                  HASH: 73964e4b5e8cb4d2a63c721b9eadd2b2f6088ef4
                   MATRIX: 957->1|1067->16|1217->141|1242->146
                   LINES: 28->1|33->1|37->5|37->5
                   -- GENERATED --
