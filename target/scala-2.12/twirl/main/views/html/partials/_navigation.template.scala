@@ -44,10 +44,10 @@ Seq[Any](format.raw/*1.4*/("""
                 <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Sign up</a>
+                <a class="nav-link" href="/signup">Sign up</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Search</a>
+                <a class="nav-link" href="/search">Search</a>
             </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">
@@ -71,9 +71,9 @@ Seq[Any](format.raw/*1.4*/("""
 
               /*
                   -- GENERATED --
-                  DATE: Sat Sep 16 15:52:50 MDT 2017
-                  SOURCE: C:/workspace/screenbuddy/app/views/partials/_navigation.scala.html
-                  HASH: 52b9baad13b3872269677fc90156c54875bf67af
+                  DATE: Tue Sep 19 12:24:34 MDT 2017
+                  SOURCE: C:/playframework/screenbuddy/app/views/partials/_navigation.scala.html
+                  HASH: 9325a373c83d42083c549ced3f25bffcb0c7a6cb
                   MATRIX: 956->1|1052->3|1082->7
                   LINES: 28->1|33->1|35->3
                   -- GENERATED --

@@ -6,7 +6,8 @@
         <entry key="root">
           <value>
             <ProjectSettingsEntry>
-              <option name="confDir" value="C:\workspace\screenbuddy\app" />
+              <option name="sourceDir" value="C:\workspace\screenbuddy\app" />
+              <option name="confDir" value="C:\playframework\screenbuddy\app" />
               <option name="templateImports">
                 <list>
                   <option value="_root_.play.twirl.api.TwirlFeatureImports._" />
@@ -37,7 +38,7 @@
                   <option value="play.libs.F" />
                 </list>
               </option>
-              <option name="uri" value="/C:/workspace/screenbuddy" />
+              <option name="uri" value="/C:/playframework/screenbuddy" />
             </ProjectSettingsEntry>
           </value>
         </entry>

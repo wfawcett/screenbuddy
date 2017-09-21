@@ -1,4 +1,4 @@
 [0m[[0mdebug[0m] [0mCopy resource mappings: [0m
-[0m[[0mdebug[0m] [0m	(C:\workspace\screenbuddy\conf\application.conf,C:\workspace\screenbuddy\target\scala-2.12\classes\application.conf)[0m
-[0m[[0mdebug[0m] [0m	(C:\workspace\screenbuddy\conf\logback.xml,C:\workspace\screenbuddy\target\scala-2.12\classes\logback.xml)[0m
-[0m[[0mdebug[0m] [0m	(C:\workspace\screenbuddy\conf\routes,C:\workspace\screenbuddy\target\scala-2.12\classes\routes)[0m
+[0m[[0mdebug[0m] [0m	(C:\playframework\screenbuddy\conf\application.conf,C:\playframework\screenbuddy\target\scala-2.12\classes\application.conf)[0m
+[0m[[0mdebug[0m] [0m	(C:\playframework\screenbuddy\conf\logback.xml,C:\playframework\screenbuddy\target\scala-2.12\classes\logback.xml)[0m
+[0m[[0mdebug[0m] [0m	(C:\playframework\screenbuddy\conf\routes,C:\playframework\screenbuddy\target\scala-2.12\classes\routes)[0m

@@ -30,9 +30,9 @@ object _head extends _root_.play.twirl.api.BaseScalaTemplate[play.twirl.api.Html
       {
 
 
-Seq[Any](format.raw/*1.17*/(""";
+Seq[Any](format.raw/*1.17*/("""
 
-<meta charset="utf-8">
+"""),format.raw/*3.1*/("""<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>"""),_display_(/*5.9*/title),format.raw/*5.14*/("""</title>
 
@@ -57,11 +57,11 @@ Seq[Any](format.raw/*1.17*/(""";
 
               /*
                   -- GENERATED --
-                  DATE: Sat Sep 16 16:23:40 MDT 2017
-                  SOURCE: C:/workspace/screenbuddy/app/views/partials/_head.scala.html
-                  HASH: 73964e4b5e8cb4d2a63c721b9eadd2b2f6088ef4
-                  MATRIX: 957->1|1067->16|1217->141|1242->146
-                  LINES: 28->1|33->1|37->5|37->5
+                  DATE: Thu Sep 21 11:43:14 MDT 2017
+                  SOURCE: C:/playframework/screenbuddy/app/views/partials/_head.scala.html
+                  HASH: bd598098e61c134b325f12a9e42f44c76e814e97
+                  MATRIX: 957->1|1067->16|1097->20|1242->140|1267->145
+                  LINES: 28->1|33->1|35->3|37->5|37->5
                   -- GENERATED --
               */
           

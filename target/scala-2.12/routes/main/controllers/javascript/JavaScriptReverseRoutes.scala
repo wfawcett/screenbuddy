@@ -1,7 +1,7 @@
 
 // @GENERATOR:play-routes-compiler
-// @SOURCE:C:/workspace/screenbuddy/conf/routes
-// @DATE:Sat Sep 16 16:00:12 MDT 2017
+// @SOURCE:C:/playframework/screenbuddy/conf/routes
+// @DATE:Thu Sep 21 11:39:51 MDT 2017
 
 import play.api.routing.JavaScriptReverseRoute
 
@@ -75,7 +75,11 @@ package controllers.javascript {
       "controllers.Assets.versioned",
       """
         function(file1) {
-          return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "assets/" + (""" + implicitly[play.api.mvc.PathBindable[Asset]].javascriptUnbind + """)("file", file1)})
+        
+          if (true) {
+            return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "public/" + (""" + implicitly[play.api.mvc.PathBindable[Asset]].javascriptUnbind + """)("file", file1)})
+          }
+        
         }
       """
     )

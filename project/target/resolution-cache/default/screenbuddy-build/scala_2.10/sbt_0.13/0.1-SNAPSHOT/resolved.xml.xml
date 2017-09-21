@@ -4,7 +4,7 @@
 		module="screenbuddy-build"
 		revision="0.1-SNAPSHOT"
 		status="integration"
-		publication="20170916151059"
+		publication="20170921110346"
 		e:sbtVersion="0.13" e:scalaVersion="2.10"
 	>
 		<description>

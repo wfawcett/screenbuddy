@@ -1,7 +1,7 @@
 
 // @GENERATOR:play-routes-compiler
-// @SOURCE:C:/workspace/screenbuddy/conf/routes
-// @DATE:Sat Sep 16 16:00:12 MDT 2017
+// @SOURCE:C:/playframework/screenbuddy/conf/routes
+// @DATE:Thu Sep 21 11:39:51 MDT 2017
 
 package router
 
@@ -47,6 +47,7 @@ class Routes(
     ("""GET""", this.prefix, """controllers.HomeController.index"""),
     ("""GET""", this.prefix + (if(this.prefix.endsWith("/")) "" else "/") + """signup""", """controllers.Secondary.signUp"""),
     ("""GET""", this.prefix + (if(this.prefix.endsWith("/")) "" else "/") + """search""", """controllers.Secondary.search"""),
+    ("""GET""", this.prefix + (if(this.prefix.endsWith("/")) "" else "/") + """public/""" + "$" + """file<.+>""", """controllers.Assets.versioned(path:String = "/public", file:Asset)"""),
     ("""GET""", this.prefix + (if(this.prefix.endsWith("/")) "" else "/") + """assets/""" + "$" + """file<.+>""", """controllers.Assets.versioned(path:String = "/public", file:Asset)"""),
     Nil
   ).foldLeft(List.empty[(String,String,String)]) { (s,e) => e.asInstanceOf[Any] match {
@@ -111,7 +112,7 @@ class Routes(
 
   // @LINE:12
   private[this] lazy val controllers_Assets_versioned3_route = Route("GET",
-    PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("assets/"), DynamicPart("file", """.+""",false)))
+    PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("public/"), DynamicPart("file", """.+""",false)))
   )
   private[this] lazy val controllers_Assets_versioned3_invoker = createInvoker(
     Assets_1.versioned(fakeValue[String], fakeValue[Asset]),
@@ -121,8 +122,26 @@ class Routes(
       "versioned",
       Seq(classOf[String], classOf[Asset]),
       "GET",
-      this.prefix + """assets/""" + "$" + """file<.+>""",
+      this.prefix + """public/""" + "$" + """file<.+>""",
       """ Map static resources from the /public folder to the /assets URL path""",
+      Seq()
+    )
+  )
+
+  // @LINE:13
+  private[this] lazy val controllers_Assets_versioned4_route = Route("GET",
+    PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("assets/"), DynamicPart("file", """.+""",false)))
+  )
+  private[this] lazy val controllers_Assets_versioned4_invoker = createInvoker(
+    Assets_1.versioned(fakeValue[String], fakeValue[Asset]),
+    play.api.routing.HandlerDef(this.getClass.getClassLoader,
+      "router",
+      "controllers.Assets",
+      "versioned",
+      Seq(classOf[String], classOf[Asset]),
+      "GET",
+      this.prefix + """assets/""" + "$" + """file<.+>""",
+      """""",
       Seq()
     )
   )
@@ -152,6 +171,12 @@ class Routes(
     case controllers_Assets_versioned3_route(params) =>
       call(Param[String]("path", Right("/public")), params.fromPath[Asset]("file", None)) { (path, file) =>
         controllers_Assets_versioned3_invoker.call(Assets_1.versioned(path, file))
+      }
+  
+    // @LINE:13
+    case controllers_Assets_versioned4_route(params) =>
+      call(Param[String]("path", Right("/public")), params.fromPath[Asset]("file", None)) { (path, file) =>
+        controllers_Assets_versioned4_invoker.call(Assets_1.versioned(path, file))
       }
   }
 }

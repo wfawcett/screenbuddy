@@ -9,11 +9,11 @@ import play.mvc.*;
 public class Secondary extends Controller {
 
     public Result signUp() {
-        return ok(views.html.index.render());
+        return ok(views.html.signup.render());
     }
 
     public Result search() {
-        return ok(views.html.index.render());
+        return ok(views.html.search.render());
     }
 
 }

@@ -1,1 +1,23 @@
 @()
+@import views.html.templates.secondary
+
+@secondary("Screen Buddy") {
+    <h1>hello world</h1>
+
+    <script type="text/javascript">
+            var myHeaders = new Headers();
+
+            var myInit = { method: 'GET',
+                headers: myHeaders,
+                mode: 'cors',
+                cache: 'default' };
+
+            var url = 'https://api.themoviedb.org/3/movie/550?api_key=274472d0b063eec06615cfed6a703b95';
+
+            var myRequest = new Request(url, myInit);
+
+            fetch(myRequest).then(function(response) {
+                console.log(response);
+            });
+    </script>
+}

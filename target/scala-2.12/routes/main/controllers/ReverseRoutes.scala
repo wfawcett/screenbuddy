@@ -1,7 +1,7 @@
 
 // @GENERATOR:play-routes-compiler
-// @SOURCE:C:/workspace/screenbuddy/conf/routes
-// @DATE:Sat Sep 16 16:00:12 MDT 2017
+// @SOURCE:C:/playframework/screenbuddy/conf/routes
+// @DATE:Thu Sep 21 11:39:51 MDT 2017
 
 import play.api.mvc.Call
 
@@ -57,8 +57,16 @@ package controllers {
   
     // @LINE:12
     def versioned(file:Asset): Call = {
-      implicit val _rrc = new play.core.routing.ReverseRouteContext(Map(("path", "/public")))
-      Call("GET", _prefix + { _defaultPrefix } + "assets/" + implicitly[play.api.mvc.PathBindable[Asset]].unbind("file", file))
+    
+      (file: @unchecked) match {
+      
+        // @LINE:12
+        case (file)  =>
+          implicit val _rrc = new play.core.routing.ReverseRouteContext(Map(("path", "/public")))
+          Call("GET", _prefix + { _defaultPrefix } + "public/" + implicitly[play.api.mvc.PathBindable[Asset]].unbind("file", file))
+      
+      }
+    
     }
   
   }

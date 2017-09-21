@@ -4,7 +4,7 @@
 		module="screenbuddy$sources_2.12"
 		revision="1.0-SNAPSHOT"
 		status="integration"
-		publication="20170916151333"
+		publication="20170921110036"
 	/>
 	<configurations>
 		<conf name="universal" visibility="public" description=""/>

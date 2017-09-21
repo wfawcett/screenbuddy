@@ -1,7 +1,7 @@
 
 // @GENERATOR:play-routes-compiler
-// @SOURCE:C:/workspace/screenbuddy/conf/routes
-// @DATE:Sat Sep 16 16:00:12 MDT 2017
+// @SOURCE:C:/playframework/screenbuddy/conf/routes
+// @DATE:Thu Sep 21 11:39:51 MDT 2017
 
 package controllers;
 
