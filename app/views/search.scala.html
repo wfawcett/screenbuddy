@@ -5,6 +5,7 @@
     <h1>hello world</h1>
 
     <script type="text/javascript">
+            var data;
             var myHeaders = new Headers();
 
             var myInit = { method: 'GET',
@@ -17,6 +18,7 @@
             var myRequest = new Request(url, myInit);
 
             fetch(myRequest).then(function(response) {
+                data = response;
                 console.log(response);
             });
     </script>
