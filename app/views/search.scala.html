@@ -4,22 +4,17 @@
 @secondary("Screen Buddy") {
     <h1>hello world</h1>
 
+    <div class="result">&nbsp;</div>
+
+
     <script type="text/javascript">
-            var data;
-            var myHeaders = new Headers();
-
-            var myInit = { method: 'GET',
-                headers: myHeaders,
-                mode: 'cors',
-                cache: 'default' };
-
-            var url = 'https://api.themoviedb.org/3/movie/550?api_key=274472d0b063eec06615cfed6a703b95';
-
-            var myRequest = new Request(url, myInit);
-
-            fetch(myRequest).then(function(response) {
-                data = response;
-                console.log(response);
-            });
+            $(document).ready(function(){
+                var url = 'https://api.themoviedb.org/3/movie/550?api_key=274472d0b063eec06615cfed6a703b95';
+                $.get( url, function( data ) {
+                    console.log(JSON.stringify(data));
+                    $( ".result" ).html( data );
+                    alert( data.imdb_id);
+                });
+            })
     </script>
 }
