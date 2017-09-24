@@ -1,0 +1,46 @@
+/* Move down content because we have a fixed navbar that is 3.5rem tall */
+body {
+  padding-top: 3.5rem;
+}
+.jumbotron{
+  background-image: url('/assets/images/home-hero.jpg');
+  color: white;
+}
+
+.container.searchPage{
+  background-color: #dcdcdc;
+  border-left: 3px solid #ccc;
+  border-top: 3px solid #ccc;
+}
+
+.result{
+  background-color: white;
+  border-right: 3px solid #ccc;
+  border-bottom: 3px solid #ccc;
+  margin: 8px;
+}
+.result div{
+  display: block;
+}
+.result>.column{
+  display: inline-block;
+  vertical-align: top;
+  margin-right: 10px;
+}
+
+.result .title{
+  font: bold 18pt arial;
+  color: #666;
+}
+.result img{
+  height: 150px;
+}
+
+.result .released{
+  font: normal 8pt arial;
+}
+
+.result .released::before{
+  content: '\1F4C5';
+  margin-right: 3px;
+}

@@ -2,19 +2,70 @@
 @import views.html.templates.secondary
 
 @secondary("Screen Buddy")("searchPage") {
-    <h1>hello world</h1>
+    <h1>Search Results</h1>
 
-    <div class="result">&nbsp;</div>
+    <div class="results">
 
+        <div class="result">
+            <div class="column">
+                <div class="image">
+                    <img src="https://image.tmdb.org/t/p/w185_and_h278_bestv2/imekS7f1OuHyUP2LAiTEM0zBzUz.jpg"/>
+                </div>
+            </div>
+            <div class="column">
+                <div class="title">Wonder Woman</div>
+                <div class="released">6-27-2017</div>
+                <div class="description">
+                    An Amazon princess comes to the world of Man to become the greatest of the female superheroes.
+                </div>
+            </div>
+        </div>
 
-    <script type="text/javascript">
-            $(document).ready(function(){
-                var url = 'https://api.themoviedb.org/3/movie/550?api_key=274472d0b063eec06615cfed6a703b95';
-                $.get( url, function( data ) {
-                    console.log(JSON.stringify(data));
-                    $( ".result" ).html( data );
-                    alert( data.imdb_id);
-                });
-            })
-    </script>
+        <div class="result">
+            <div class="column">
+                <div class="image">
+                    <img src="https://image.tmdb.org/t/p/w185_and_h278_bestv2/imekS7f1OuHyUP2LAiTEM0zBzUz.jpg"/>
+                </div>
+            </div>
+            <div class="column">
+                <div class="title">Wonder Woman</div>
+                <div class="released">6-27-2017</div>
+                <div class="description">
+                    An Amazon princess comes to the world of Man to become the greatest of the female superheroes.
+                </div>
+            </div>
+        </div>
+
+        <div class="result">
+            <div class="column">
+                <div class="image">
+                    <img src="https://image.tmdb.org/t/p/w185_and_h278_bestv2/imekS7f1OuHyUP2LAiTEM0zBzUz.jpg"/>
+                </div>
+            </div>
+            <div class="column">
+                <div class="title">Wonder Woman</div>
+                <div class="released">6-27-2017</div>
+                <div class="description">
+                    An Amazon princess comes to the world of Man to become the greatest of the female superheroes.
+                </div>
+            </div>
+        </div>
+
+        <div class="result">
+            <div class="column">
+                <div class="image">
+                    <img src="https://image.tmdb.org/t/p/w185_and_h278_bestv2/imekS7f1OuHyUP2LAiTEM0zBzUz.jpg"/>
+                </div>
+            </div>
+            <div class="column">
+                <div class="title">Wonder Woman</div>
+                <div class="released">6-27-2017</div>
+                <div class="description">
+                    An Amazon princess comes to the world of Man to become the greatest of the female superheroes.
+                </div>
+            </div>
+        </div>
+
+    </div>
+
 }
