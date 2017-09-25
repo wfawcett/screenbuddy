@@ -2,8 +2,8 @@
 body {
   padding-top: 3.5rem;
 }
-.jumbotron{
-  background-image: url('/assets/images/home-hero.jpg');
+.jumbotron {
+  background: linear-gradient(rgba(25,25,25,0.6),rgba(25,25,25,0.6)),url('/assets/images/home-hero.jpg');
   color: white;
 }
 

@@ -8,17 +8,14 @@
     @_head(title)
     </head>
 
-    <body>
+    <body class="@classname">
 
         @_navigation()
+        @content
 
-        <div class="container  @classname">
+        <footer>
+            <p>&copy; Company 2017</p>
+        </footer>
 
-            @content
-
-            <footer>
-                <p>&copy; Company 2017</p>
-            </footer>
-        </div> <!-- /container -->
     </body>
 </html>
