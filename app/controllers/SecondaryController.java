@@ -22,16 +22,22 @@ public class SecondaryController extends Controller implements WSBodyReadables, 
 
     }
 
-    public Result search() {
-        return ok(views.html.secondary.search.render());
+    public CompletionStage<Result> search(String phrase) {
+        String searchUrl = "https://api.themoviedb.org/3/search/movie";
+        WSRequest request = ws.url(searchUrl);
+        WSRequest complexRequest = request
+                .addQueryParameter("api_key", "274472d0b063eec06615cfed6a703b95")
+                .addQueryParameter("language", "en-US")
+                .addQueryParameter("query", "searchString")
+                .addQueryParameter("page", "1")
+                .addQueryParameter("'include_adult'", "false");
+        return complexRequest.get().thenApply(response -> ok(views.html.secondary.search.render(response.asJson())));
     }
 
     public CompletionStage<Result> movie(String movieId) {
         WSRequest request = ws.url("https://api.themoviedb.org/3/movie/" + movieId);
         WSRequest complexRequest = request.addQueryParameter("api_key", "274472d0b063eec06615cfed6a703b95");
-        return complexRequest.get()
-                .thenApply(response -> ok(views.html.secondary.movie.render(response.asJson()))
-        );
+        return complexRequest.get().thenApply(response -> ok(views.html.secondary.movie.render(response.asJson())));
         //return ok(views.html.secondary.movie.render(movieId));
         // ok("Feed title: " + response.asJson().findPath("title").asText())
     }
