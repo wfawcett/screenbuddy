@@ -6,7 +6,9 @@
 GET     /                           controllers.HomeController.index
 
 GET     /signup                     controllers.SecondaryController.signUp
-GET     /search/*phrase                     controllers.SecondaryController.search(phrase: String)
+GET     /search                     controllers.SecondaryController.search
+GET     /search/*phrase             controllers.SecondaryController.searchResults(phrase: String)
+
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /public/*file               controllers.Assets.versioned(path="/public", file: Asset)

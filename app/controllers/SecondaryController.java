@@ -22,7 +22,12 @@ public class SecondaryController extends Controller implements WSBodyReadables, 
 
     }
 
-    public CompletionStage<Result> search(String phrase) {
+    public Result search() {
+        return ok(views.html.secondary.search.render() );
+
+    }
+
+    public CompletionStage<Result> searchResults(String phrase) {
         String searchUrl = "https://api.themoviedb.org/3/search/movie";
         WSRequest request = ws.url(searchUrl);
         WSRequest complexRequest = request
@@ -31,7 +36,7 @@ public class SecondaryController extends Controller implements WSBodyReadables, 
                 .addQueryParameter("query", phrase)
                 .addQueryParameter("page", "1")
                 .addQueryParameter("'include_adult'", "false");
-        return complexRequest.get().thenApply(response -> ok(views.html.secondary.search.render(
+        return complexRequest.get().thenApply(response -> ok(views.html.secondary.searchResults.render(
                 response.asJson(),
                 response.asJson().get("total_results").asInt()
         )));

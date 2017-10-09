@@ -1,38 +1,44 @@
-@(movieData: com.fasterxml.jackson.databind.JsonNode, resultCount: Int)
-
-@import com.fasterxml.jackson.databind.JsonNode; var result:com.fasterxml.jackson.databind.JsonNode=null //where Any is the datatype accoding to your requirement
-
+@()
 @import views.html.templates.secondary
 
-
-
-@secondary("Screen Buddy")("searchPage") {
-    <h1>Search Results</h1>
-
-
-
-    <div class="results">
-
-        @for(index <- 0 until 10){
-            @{result = movieData.get("results").get(index)}
-            <div class="result">
-                <div class="column">
-                    <div class="image">
-                        <a href="/movie/@result.get("id").asText()" >
-                            <img src="https://image.tmdb.org/t/p/w185_and_h278_bestv2@result.get("poster_path").asText()"/>
-                        </a>
-                    </div>
-                </div>
-                <div class="column">
-                    <div class="title">@result.get("title").asText()</div>
-                    <div class="released">@result.get("release_date").asText()</div>
-                    <div class="description">@result.get("overview").asText()</div>
+@secondary("Screen Buddy")("search") {
+    <div class="container">
+        <form class="form-horizontal" role="form" method="GET" id="searchForm">
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    <h2>Register New User</h2>
+                    <hr>
                 </div>
             </div>
-        }
-
-
-
+            <div class="row">
+                <div class="col-md-3 field-label-responsive">
+                    <label for="name">Name</label>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                            <div class="input-group-addon" style="width: 2.6rem"><i class="fa fa-search"></i></div>
+                            <input type="text" name="query" class="form-control" id="query"
+                            placeholder="The Avengers" required autofocus>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-control-feedback">
+                        <span class="text-danger align-middle">
+                                <!-- Put name validation error messages here -->
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
-
+    <script>
+        $('document').ready(function(){
+            $( "#searchForm" ).submit(function( event ) {
+                doSearch('#query',event);
+            });
+        });
+    </script>
 }

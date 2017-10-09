@@ -1,0 +1,32 @@
+@(movieData: com.fasterxml.jackson.databind.JsonNode, resultCount: Int)
+
+@import com.fasterxml.jackson.databind.JsonNode; var result:com.fasterxml.jackson.databind.JsonNode=null //where Any is the datatype accoding to your requirement
+
+@import views.html.templates.secondary
+
+
+
+@secondary("Screen Buddy")("searchPage") {
+    <div class="container">
+        <h1>Search Results:</h1>
+        <div class="results">
+            @for(index <- 0 until 10){
+                @{result = movieData.get("results").get(index)}
+                <div class="result row">
+                    <div class="col-2">
+                        <div class="image">
+                            <a href="/movie/@result.get("id").asText()" >
+                                <img src="https://image.tmdb.org/t/p/w185_and_h278_bestv2@result.get("poster_path").asText()"/>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-sm-9">
+                        <div class="title">@result.get("title").asText()</div>
+                        <div class="released">@result.get("release_date").asText()</div>
+                        <div class="description">@result.get("overview").asText()</div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}

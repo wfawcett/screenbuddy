@@ -2,22 +2,29 @@
 body {
   padding-top: 3.5rem;
 }
+
+
+  .field-label-responsive {
+    padding-top: .5rem;
+    text-align: right;
+  }
+
 .jumbotron {
   background: linear-gradient(rgba(25,25,25,0.6),rgba(25,25,25,0.6)),url('/assets/images/home-hero.jpg');
   color: white;
 }
 
-.container.searchPage{
-  background-color: #dcdcdc;
-  border-left: 3px solid #ccc;
-  border-top: 3px solid #ccc;
+body.searchPage{
+  background-color: #eee;
 }
 
 .result{
   background-color: white;
-  border-right: 3px solid #ccc;
-  border-bottom: 3px solid #ccc;
-  margin: 8px;
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+  margin: 12px;
+}
+.result .col-2{
+  padding-left: 0px;
 }
 .result div{
   display: block;
