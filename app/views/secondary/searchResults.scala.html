@@ -21,7 +21,11 @@
                         </div>
                     </div>
                     <div class="col-sm-9">
-                        <div class="title">@result.get("title").asText()</div>
+                        <div class="title">
+                            <a href="/movie/@result.get("id").asText()" >
+                                @result.get("title").asText()
+                            </a>
+                        </div>
                         <div class="released">@result.get("release_date").asText()</div>
                         <div class="description">@result.get("overview").asText()</div>
                     </div>
