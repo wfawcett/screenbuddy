@@ -34,9 +34,7 @@ create table user (
   id                            bigint auto_increment not null,
   email                         varchar(255),
   hash_pass                     varchar(255),
-  last_name                     varchar(255),
-  first_name                    varchar(255),
-  create_time                   datetime(6),
+  name                          varchar(255),
   constraint pk_user primary key (id)
 );
 
