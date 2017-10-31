@@ -1,8 +1,13 @@
-@()
+@(message: String)
     @import views.html.templates.secondary
 
     @secondary("Screen Buddy")("signUp") {
         <div class="container">
+            @if(message != null) {
+                <div class="alert alert-danger">
+                @message
+                </div>
+            }
             <form class="form-horizontal" role="form" method="POST" action="@routes.AccountController.authenticate()">
                 <div class="row">
                     <div class="col-md-3"></div>
