@@ -20,12 +20,17 @@ public class AccountController {
 
     public Result index() {
         if (authorized() == false) return bounceThem();
-        return ok(views.html.account.render());
+        return ok(views.html.account.render(usr));
     }
 
     public Result login() {
         String message = flash("authentication");
         return ok(views.html.login.render(message));
+    }
+
+    public Result logout(){
+        session().remove("userid");
+        return redirect("/");
     }
 
     public Result authenticate() {
@@ -36,7 +41,7 @@ public class AccountController {
             flash("authentication", "Incorrect email or password, please try again");
             return bounceThem();
         } else {
-            return redirect("/account/");
+            return redirect("/account");
         }
     }
 

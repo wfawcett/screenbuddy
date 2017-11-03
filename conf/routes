@@ -11,8 +11,9 @@ GET         /search/*phrase              controllers.SecondaryController.searchR
 
 POST        /register                    controllers.UserController.registerUser
 
-GET         /account/                    controllers.AccountController.index
+GET         /account                    controllers.AccountController.index
 GET         /login                       controllers.AccountController.login
+GET         /logout                       controllers.AccountController.logout
 POST        /account/authenticate        controllers.AccountController.authenticate
 
 # Map static resources from the /public folder to the /assets URL path
