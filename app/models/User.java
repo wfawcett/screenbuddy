@@ -1,28 +1,28 @@
 package models;
 
-import play.data.format.Formats;
-import play.data.validation.Constraints;
+import io.ebean.Ebean;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import javax.persistence.Entity;
-import java.util.Date;
 
 
 @Entity
 public class User extends BaseModel {
-    private static final long serialVersionUID = 1L;
 
-    @Constraints.Required
     public String email;
-
-    @Constraints.Required
     public String hashPass;
+    public String name;
 
-    @Constraints.Required
-    public String lastName;
-
-    @Constraints.Required
-    public String firstName;
-
-    @Formats.DateTime(pattern="yyyy-MM-dd")
-    public Date createTime;
+    public static User authCheck(String email, String password){
+        User usr = null;
+        if(email != null && password != null){
+            String hashPass = DigestUtils.sha1Hex(password);
+            usr = Ebean.find(User.class)
+                    .where()
+                    .eq("email", email )
+                    .eq("hashPass", hashPass)
+                    .findOne();
+        }
+        return usr;
+    }
 }
