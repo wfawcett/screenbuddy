@@ -30,6 +30,23 @@ create table service (
   constraint pk_service primary key (id)
 );
 
+create table title (
+  id                            bigint auto_increment not null,
+  tmdb_id                       integer not null,
+  backdrop_path                 varchar(255),
+  original_language             varchar(255),
+  overview                      varchar(255),
+  poster_path                   varchar(255),
+  release_date                  datetime(6),
+  status                        varchar(255),
+  tagline                       varchar(255),
+  title                         varchar(255),
+  vote_average                  double,
+  vote_count                    integer not null,
+  popularity                    double,
+  constraint pk_title primary key (id)
+);
+
 create table user (
   id                            bigint auto_increment not null,
   email                         varchar(255),
@@ -55,6 +72,8 @@ drop table if exists redbox;
 drop table if exists request;
 
 drop table if exists service;
+
+drop table if exists title;
 
 drop table if exists user;
 

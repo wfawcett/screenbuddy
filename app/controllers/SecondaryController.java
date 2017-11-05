@@ -48,8 +48,6 @@ public class SecondaryController extends Controller implements WSBodyReadables, 
         return complexRequest.get().thenApply(response -> ok(views.html.movie.render(
                 response.asJson()
         )));
-        //return ok(views.html.secondary.movie.render(movieId));
-        // ok("Feed title: " + response.asJson().findPath("title").asText())
     }
 
 
