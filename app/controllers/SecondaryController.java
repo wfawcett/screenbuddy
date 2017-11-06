@@ -1,5 +1,6 @@
 package controllers;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import models.Title;
 import play.libs.ws.WSBodyReadables;
 import play.libs.ws.WSBodyWritables;
@@ -29,18 +30,17 @@ public class SecondaryController extends Controller implements WSBodyReadables, 
     }
 
     public CompletionStage<Result> searchResults(String phrase) {
-        String searchUrl = "https://api.themoviedb.org/3/search/movie";
-        WSRequest request = ws.url(searchUrl);
-        WSRequest complexRequest = request
+        return ws.url("https://api.themoviedb.org/3/search/movie")
                 .addQueryParameter("api_key", "274472d0b063eec06615cfed6a703b95")
                 .addQueryParameter("language", "en-US")
                 .addQueryParameter("query", phrase)
                 .addQueryParameter("page", "1")
-                .addQueryParameter("'include_adult'", "false");
-        return complexRequest.get().thenApply(response -> ok(views.html.searchResults.render(
-                response.asJson(),
-                response.asJson().get("total_results").asInt()
-        )));
+                .addQueryParameter("'include_adult'", "false")
+                .get().thenApply(response ->{
+                    int resultCount = response.asJson().get("total_results").asInt();
+                    resultCount = resultCount > 10 ? 10 : resultCount;
+                    return ok(views.html.searchResults.render(response.asJson(),resultCount));
+                });
     }
 
     public CompletionStage<Result> movie(String movieId) {
