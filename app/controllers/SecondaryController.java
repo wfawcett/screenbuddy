@@ -1,12 +1,14 @@
 package controllers;
 
+import models.Title;
+import play.libs.ws.WSBodyReadables;
+import play.libs.ws.WSBodyWritables;
+import play.libs.ws.WSClient;
+import play.libs.ws.WSRequest;
+import play.mvc.Controller;
+import play.mvc.Result;
+
 import javax.inject.Inject;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import play.mvc.*;
-import play.libs.ws.*;
-
-import java.time.Duration;
 import java.util.concurrent.CompletionStage;
 
 public class SecondaryController extends Controller implements WSBodyReadables, WSBodyWritables {
@@ -24,7 +26,6 @@ public class SecondaryController extends Controller implements WSBodyReadables, 
 
     public Result search() {
         return ok(views.html.search.render() );
-
     }
 
     public CompletionStage<Result> searchResults(String phrase) {
@@ -43,11 +44,9 @@ public class SecondaryController extends Controller implements WSBodyReadables, 
     }
 
     public CompletionStage<Result> movie(String movieId) {
-        WSRequest request = ws.url("https://api.themoviedb.org/3/movie/" + movieId);
-        WSRequest complexRequest = request.addQueryParameter("api_key", "274472d0b063eec06615cfed6a703b95");
-        return complexRequest.get().thenApply(response -> ok(views.html.movie.render(
-                response.asJson()
-        )));
+        return Title.getByTmdbId(Integer.valueOf(movieId), ws)
+                .thenApply(movieData -> ok(views.html.movie.render(movieData)));
+
     }
 
 
