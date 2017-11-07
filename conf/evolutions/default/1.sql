@@ -38,6 +38,7 @@ create table title (
   overview                      TEXT,
   poster_path                   varchar(255),
   release_date                  datetime(6),
+  release_year                  integer not null,
   status                        varchar(255),
   tagline                       varchar(255),
   original_title                varchar(255),

@@ -11,8 +11,10 @@ import java.util.Date;
 public class Redbox extends BaseModel {
 
     @Constraints.Required
-    public int titleId;
+    public Long titleId;
 
     @Formats.DateTime(pattern="yyyy-MM-dd")
     public Date lastSeen;
+
+    public Boolean soon;
 }

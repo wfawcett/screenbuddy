@@ -1,11 +1,9 @@
 package controllers;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import models.Title;
 import play.libs.ws.WSBodyReadables;
 import play.libs.ws.WSBodyWritables;
 import play.libs.ws.WSClient;
-import play.libs.ws.WSRequest;
 import play.mvc.Controller;
 import play.mvc.Result;
 
