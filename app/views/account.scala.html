@@ -1,12 +1,17 @@
-@(usr: User)
+@(userData: List[User])(user: User)
 @import views.html.templates.secondary
 
 
 @secondary("Account")("account") {
     <div class="container">
-        <h1>Welcome @usr.name</h1>
+        <h1>Welcome @user.name</h1>
 
         Requested Movies:
+
+        @userData
+
+
+
         <a href="/logout">Logout</a>
     </div>
 

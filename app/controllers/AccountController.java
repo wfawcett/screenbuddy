@@ -1,12 +1,16 @@
 package controllers;
 
+
 import com.google.inject.Inject;
 import io.ebean.Ebean;
-import models.Request;
+import io.ebean.text.json.EJson;
+import io.ebean.text.json.JsonContext;
 import models.User;
+import play.Logger;
 import play.data.Form;
 import play.data.FormFactory;
 import play.mvc.Result;
+import views.html.account;
 
 import java.util.List;
 
@@ -25,7 +29,20 @@ public class AccountController {
         if (authorized() == false) {
             return bounceThem("Authorized Access, please log in");
         }
-        return ok(views.html.account.render(usr));
+
+        List<User> userList = User.find.query()
+                .fetch("requests")
+                .where().eq("id",usr.id)
+                .findList();
+        try{
+            JsonContext json = Ebean.json();
+            String jsonOutput = json.toJson(userList);
+            Logger.debug("########" + jsonOutput);
+        }catch(Exception ex){
+            Logger.debug("@@@@@@@@@@@@badthings");
+        }
+
+        return ok(account.render(userList,usr));
     }
 
     public Result login() {

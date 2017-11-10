@@ -1,15 +1,19 @@
 package models;
 
-import io.ebean.Ebean;
+import java.util.*;
+import javax.persistence.*;
+
+import io.ebean.*;
+import play.data.format.*;
+import play.data.validation.*;
 import org.apache.commons.codec.digest.DigestUtils;
 
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import java.util.List;
 
 
 @Entity
-public class User extends BaseModel {
+public class User extends Model {
+    @Id
+    public Long id;
 
     public String email;
     public String hashPass;
@@ -17,6 +21,8 @@ public class User extends BaseModel {
 
     @OneToMany(mappedBy = "user")
     List<Request> requests;
+
+    public static final Finder<Long, User>  find = new Finder<>(User.class);
 
     public static User authCheck(String email, String password){
         User usr = null;

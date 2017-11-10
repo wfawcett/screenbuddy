@@ -1,14 +1,19 @@
 package models;
 
-import javax.persistence.Entity;
+import java.util.*;
+import javax.persistence.*;
 
-import play.data.format.Formats;
-import play.data.validation.Constraints;
+import io.ebean.*;
+import play.data.format.*;
+import play.data.validation.*;
 
-import java.util.Date;
+
 
 @Entity
-public class Redbox extends BaseModel {
+public class Redbox extends Model {
+
+    @Id
+    public Long id;
 
     @Constraints.Required
     public Long titleId;
@@ -17,4 +22,6 @@ public class Redbox extends BaseModel {
     public Date lastSeen;
 
     public Boolean soon;
+
+    public static final Finder<Long, Redbox>  find = new Finder<>(Redbox.class);
 }

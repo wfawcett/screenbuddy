@@ -2,14 +2,13 @@ package models;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import io.ebean.Ebean;
+import io.ebean.Finder;
+import io.ebean.Model;
 import play.Logger;
 import play.libs.ws.WSClient;
 
 import javax.inject.Inject;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.NonUniqueResultException;
-import javax.persistence.PrePersist;
+import javax.persistence.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,7 +19,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 @Entity
-public class Title extends BaseModel {
+public class Title extends Model {
+    @Id
+    public Long id;
     public int tmdbId;
     public String backdropPath;
     public String originalLanguage;
@@ -36,6 +37,8 @@ public class Title extends BaseModel {
     public Double voteAverage;
     public int voteCount;
     public Double popularity;
+
+    public static final Finder<Long, Title> find = new Finder<>(Title.class);
 
     private final WSClient ws;
 
