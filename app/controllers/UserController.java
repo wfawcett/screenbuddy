@@ -37,6 +37,7 @@ public class UserController {
         Logger.debug("***************USER: " + usr.toString());
         usr.save();
         session("userid", usr.id.toString()); // set the user in the session.
+        session("username", usr.name);
         return true;
     }
 }

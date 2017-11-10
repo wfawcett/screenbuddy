@@ -1,19 +1,18 @@
 package models;
 
-import javax.persistence.Entity;
-
-
-
 import play.data.validation.Constraints;
+
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Request extends BaseModel {
 
-    @Constraints.Required
-    public int titleId;
+    @ManyToOne(optional = false)
+    Title title;
 
-    @Constraints.Required
-    public int userId;
+    @ManyToOne(optional = false)
+    User user;
 
 
 }

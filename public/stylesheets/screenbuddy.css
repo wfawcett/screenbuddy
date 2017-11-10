@@ -51,3 +51,14 @@ body.searchPage{
   content: '\1F4C5';
   margin-right: 3px;
 }
+
+.nav-user{margin: 0px 8px;}
+.nav-user>i{
+  font-size: 24pt;
+  color: #28a745;
+}
+.nav-user>a{
+  color: rgba(255,255,255,0.5);
+  line-height: 20px;
+  vertical-align: super;
+}

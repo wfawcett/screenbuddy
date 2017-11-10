@@ -12,15 +12,16 @@ create table amazon (
 
 create table redbox (
   id                            bigint auto_increment not null,
-  title_id                      integer not null,
+  title_id                      bigint,
   last_seen                     datetime(6),
+  soon                          tinyint(1) default 0,
   constraint pk_redbox primary key (id)
 );
 
 create table request (
   id                            bigint auto_increment not null,
-  title_id                      integer not null,
-  user_id                       integer not null,
+  title_id                      bigint not null,
+  user_id                       bigint not null,
   constraint pk_request primary key (id)
 );
 
@@ -63,8 +64,20 @@ create table user_service (
   constraint pk_user_service primary key (id)
 );
 
+alter table request add constraint fk_request_title_id foreign key (title_id) references title (id) on delete restrict on update restrict;
+create index ix_request_title_id on request (title_id);
+
+alter table request add constraint fk_request_user_id foreign key (user_id) references user (id) on delete restrict on update restrict;
+create index ix_request_user_id on request (user_id);
+
 
 # --- !Downs
+
+alter table request drop foreign key fk_request_title_id;
+drop index ix_request_title_id on request;
+
+alter table request drop foreign key fk_request_user_id;
+drop index ix_request_user_id on request;
 
 drop table if exists amazon;
 

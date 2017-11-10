@@ -2,10 +2,13 @@ package controllers;
 
 import com.google.inject.Inject;
 import io.ebean.Ebean;
+import models.Request;
 import models.User;
 import play.data.Form;
 import play.data.FormFactory;
 import play.mvc.Result;
+
+import java.util.List;
 
 import static play.mvc.Controller.flash;
 import static play.mvc.Controller.session;
@@ -19,7 +22,9 @@ public class AccountController {
     private User usr;
 
     public Result index() {
-        if (authorized() == false) return bounceThem();
+        if (authorized() == false) {
+            return bounceThem("Authorized Access, please log in");
+        }
         return ok(views.html.account.render(usr));
     }
 
@@ -30,6 +35,7 @@ public class AccountController {
 
     public Result logout(){
         session().remove("userid");
+        session().remove("username");
         return redirect("/");
     }
 
@@ -38,9 +44,10 @@ public class AccountController {
         User userFormObject = form.bindFromRequest().get();
         User authorizedUser = User.authCheck(userFormObject.email, userFormObject.hashPass);
         if (authorizedUser == null) {
-            flash("authentication", "Incorrect email or password, please try again");
-            return bounceThem();
+            return bounceThem("Incorrect email or password, please try again");
         } else {
+            session("userid", authorizedUser.id.toString()); // set the user in the session.
+            session("username", authorizedUser.name);
             return redirect("/account");
         }
     }
@@ -54,7 +61,8 @@ public class AccountController {
         return usr != null;
     }
 
-    public Result bounceThem() {
+    public Result bounceThem(String message) {
+        flash("authentication", message);
         return redirect("/login");
     }
 

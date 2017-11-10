@@ -1,6 +1,13 @@
 @(usr: User)
+@import views.html.templates.secondary
 
-<h1>Welcome @usr.name</h1>
 
+@secondary("Account")("account") {
+    <div class="container">
+        <h1>Welcome @usr.name</h1>
 
-<a href="/logout">Logout</a>
+        Requested Movies:
+        <a href="/logout">Logout</a>
+    </div>
+
+}
