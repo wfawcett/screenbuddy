@@ -14,10 +14,10 @@ public class Request extends Model {
     public Long id;
 
     @ManyToOne(optional = false)
-    Title title;
+    public Title title;
 
     @ManyToOne(optional = false)
-    User user;
+    public User user;
 
     public static final Finder<Long, Request> find = new Finder<>(Request.class);
 

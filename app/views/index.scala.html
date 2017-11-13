@@ -1,6 +1,6 @@
-@()
+@(username: String)
 @import views.html.templates.jumbotron
 
-@jumbotron("Screen Buddy") {
+@jumbotron("Screen Buddy")(username) {
   <h1>Welcome</h1>
 }

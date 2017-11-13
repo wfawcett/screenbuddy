@@ -1,7 +1,7 @@
-@()
+@(username: String)
 @import views.html.templates.secondary
 
-    @secondary("Screen Buddy")("signUp") {
+    @secondary("Screen Buddy")("signUp")(username) {
         <div class="container">
             <form class="form-horizontal" role="form" method="POST" action="@routes.UserController.registerUser()">
                 <div class="row">

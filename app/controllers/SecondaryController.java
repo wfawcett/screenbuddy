@@ -19,15 +19,18 @@ public class SecondaryController extends Controller implements WSBodyReadables, 
     }
 
     public Result signUp() {
-        return ok(views.html.signup.render() );
+        String username = session("username");
+        return ok(views.html.signup.render(username) );
 
     }
 
     public Result search() {
-        return ok(views.html.search.render() );
+        String username = session("username");
+        return ok(views.html.search.render(username) );
     }
 
     public CompletionStage<Result> searchResults(String phrase) {
+        String username = session("username");
         return ws.url("https://api.themoviedb.org/3/search/movie")
                 .addQueryParameter("api_key", "274472d0b063eec06615cfed6a703b95")
                 .addQueryParameter("language", "en-US")
@@ -37,13 +40,14 @@ public class SecondaryController extends Controller implements WSBodyReadables, 
                 .get().thenApply(response ->{
                     int resultCount = response.asJson().get("total_results").asInt();
                     resultCount = resultCount > 10 ? 10 : resultCount;
-                    return ok(views.html.searchResults.render(response.asJson(),resultCount));
+                    return ok(views.html.searchResults.render(response.asJson(),resultCount, username));
                 });
     }
 
     public CompletionStage<Result> movie(String movieId) {
+        String username = session("username");
         return Title.getByTmdbId(Integer.valueOf(movieId), ws)
-                .thenApply(movieData -> ok(views.html.movie.render(movieData)));
+                .thenApply(movieData -> ok(views.html.movie.render(movieData, username)));
 
     }
 

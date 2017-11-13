@@ -1,7 +1,7 @@
-@()
+@(username: String)
 @import views.html.templates.secondary
 
-@secondary("Screen Buddy")("search") {
+@secondary("Screen Buddy")("search")(username) {
     <div class="container">
         <form class="form-horizontal" role="form" method="GET" id="searchForm">
             <div class="row">

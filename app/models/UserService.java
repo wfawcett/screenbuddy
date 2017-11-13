@@ -1,6 +1,7 @@
 package models;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 import io.ebean.Finder;
 import io.ebean.Model;
@@ -11,11 +12,11 @@ public class UserService extends Model {
     @Id
     public Long id;
 
-    @Constraints.Required
-    public int userId;
+    @ManyToOne(optional = false)
+    public Service service;
 
-    @Constraints.Required
-    public int serviceId;
+    @ManyToOne(optional = false)
+    public User user;
 
     public static final Finder<Long, UserService> find = new Finder<>(UserService.class);
 

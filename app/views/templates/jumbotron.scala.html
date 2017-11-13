@@ -1,4 +1,5 @@
-@(title: String)(content: Html)
+@(title: String )(username: String)(content: Html)
+
 @import views.html.partials._head
 @import views.html.partials._navigation
 
@@ -10,7 +11,7 @@
 
     <body>
 
-    @_navigation()
+    @_navigation(username)
 
             <!-- Main jumbotron for a primary marketing message or call to action -->
         <div class="jumbotron">

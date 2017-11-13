@@ -20,7 +20,10 @@ public class User extends Model {
     public String name;
 
     @OneToMany(mappedBy = "user")
-    List<Request> requests;
+    public List<Request> requests;
+
+    @OneToMany(mappedBy = "user" )
+    public List<UserService> userServices;
 
     public static final Finder<Long, User>  find = new Finder<>(User.class);
 

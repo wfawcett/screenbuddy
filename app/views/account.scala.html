@@ -2,17 +2,80 @@
 @import views.html.templates.secondary
 
 
-@secondary("Account")("account") {
+@secondary("Account")("account")(user.name){
     <div class="container">
-        <h1>Welcome @user.name</h1>
+        <div class="row">
+            <br/>
+        </div>
 
-        Requested Movies:
+        <div class="row">
+            <div class="col-md-8">
+                <h1>
+                    <i class="fa fa-user-o"></i> @user.name
+                </h1>
+                <p><i class="fa fa-envelope-o"></i> @user.email</p>
+                <p>
+                    <a href="/changepass">Change password</a> |
+                    <a href="/logout">Logout</a>
+                </p>
+            </div>
+            <div class="col-md-4">
+                <h3><i class="fa fa-play-circle-o"></i> Requested Movies</h3>
+                <hr>
+                <ul style="list-style: none">
+                @for(request <- userData.get(0).requests){
+                    <li style="margin-bottom:5px;"><img height= "75" src="//image.tmdb.org/t/p/w92/@request.title.posterPath"/>
+                        <div style="display:inline-block; vertical-align: middle" >
+                            <h5>@request.title.originalTitle</h5>
+                            @request.title.status @request.title.releaseYear<br/>
+                            Average vote: @request.title.voteAverage
+                        </div>
+                    </li>
+                }
+                </ul>
+            </div>
+        </div>
 
-        @userData
-
-
-
-        <a href="/logout">Logout</a>
+        <div class="row">
+            <h3>
+                <i class="fa fa-cogs"></i> Services
+            </h3>
+        </div>
+        <div class="row services">
+            <a class='service-image notSubscribed' href="#" serviceName="Redbox" serviceId="1" onclick="toggleService(this)">
+                <img src="/assets/images/services/redbox.png"/>
+            </a>
+            <a class='service-image notSubscribed' href="#" serviceName="Amazon" serviceId="2" onclick="toggleService(this)">
+                <img src="/assets/images/services/amazon.png"/>
+            </a>
+        </div>
     </div>
+
+    <script>
+        var userId = @user.id;
+        function toggleService(control){
+            // organize data
+            var $control = $(control),
+                action = $control.hasClass('notSubscribed')? "add" : "remove",
+                service = $control.attr("serviceName"),
+                serviceId = $control.attr("serviceId");
+
+            // ajax call to update the database.
+            $.post("/account/serviceChange", {serviceId: serviceId, userId: userId, action: action})
+                    .done(function(){
+                        if(action == "add"){
+                            $control.removeClass('notSubscribed');
+                            toastr["info"]("Added " + service + " to your subscriptions", "Added")
+                        }else{
+                            $control.addClass('notSubscribed');
+                            toastr["info"]("Removed " + service + " to your subscriptions", "Removed")
+                        }
+                    })
+                    .fail( function(xhr, textStatus, errorThrown) {
+                        toastr["error"](errorThrown);
+                    })
+        }
+
+    </script>
 
 }

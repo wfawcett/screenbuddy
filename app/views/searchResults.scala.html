@@ -1,11 +1,11 @@
-@(movieData: com.fasterxml.jackson.databind.JsonNode, count: Int)
+@(movieData: com.fasterxml.jackson.databind.JsonNode, count: Int)(username: String)
 
 @import com.fasterxml.jackson.databind.JsonNode; var result:com.fasterxml.jackson.databind.JsonNode=null;
 @import views.html.templates.secondary
 
 
 
-@secondary("Screen Buddy")("searchPage") {
+@secondary("Screen Buddy")("searchPage")(username){
     <div class="container">
         <h1>Search Results:</h1>
         <div class="results">

@@ -1,7 +1,7 @@
-@(message: String)
+@(message: String)(username: String)
     @import views.html.templates.secondary
 
-    @secondary("Screen Buddy")("signUp") {
+    @secondary("Screen Buddy")("signUp")(username) {
         <div class="container">
             @if(message != null) {
                 <div class="alert alert-danger">

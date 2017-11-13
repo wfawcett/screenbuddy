@@ -1,4 +1,4 @@
-@(title: String)(classname: String)(content: Html)
+@(title: String)(classname: String)(username: String)(content: Html)
 @import views.html.partials._head
 @import views.html.partials._navigation
 
@@ -10,7 +10,7 @@
 
     <body class="@classname">
 
-        @_navigation()
+        @_navigation(username)
         @content
 
         <div class="container">

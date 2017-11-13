@@ -59,8 +59,8 @@ create table user (
 
 create table user_service (
   id                            bigint auto_increment not null,
-  user_id                       integer not null,
-  service_id                    integer not null,
+  service_id                    bigint not null,
+  user_id                       bigint not null,
   constraint pk_user_service primary key (id)
 );
 
@@ -70,6 +70,12 @@ create index ix_request_title_id on request (title_id);
 alter table request add constraint fk_request_user_id foreign key (user_id) references user (id) on delete restrict on update restrict;
 create index ix_request_user_id on request (user_id);
 
+alter table user_service add constraint fk_user_service_service_id foreign key (service_id) references service (id) on delete restrict on update restrict;
+create index ix_user_service_service_id on user_service (service_id);
+
+alter table user_service add constraint fk_user_service_user_id foreign key (user_id) references user (id) on delete restrict on update restrict;
+create index ix_user_service_user_id on user_service (user_id);
+
 
 # --- !Downs
 
@@ -78,6 +84,12 @@ drop index ix_request_title_id on request;
 
 alter table request drop foreign key fk_request_user_id;
 drop index ix_request_user_id on request;
+
+alter table user_service drop foreign key fk_user_service_service_id;
+drop index ix_user_service_service_id on user_service;
+
+alter table user_service drop foreign key fk_user_service_user_id;
+drop index ix_user_service_user_id on user_service;
 
 drop table if exists amazon;
 
