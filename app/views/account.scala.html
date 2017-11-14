@@ -1,4 +1,4 @@
-@(userData: List[User])(user: User)
+@(userData: List[User])(user: User)(services : List[com.fasterxml.jackson.databind.node.ObjectNode])
 @import views.html.templates.secondary
 
 
@@ -42,12 +42,11 @@
             </h3>
         </div>
         <div class="row services">
-            <a class='service-image notSubscribed' href="#" serviceName="Redbox" serviceId="1" onclick="toggleService(this)">
-                <img src="/assets/images/services/redbox.png"/>
-            </a>
-            <a class='service-image notSubscribed' href="#" serviceName="Amazon" serviceId="2" onclick="toggleService(this)">
-                <img src="/assets/images/services/amazon.png"/>
-            </a>
+            @for(service <- services){
+                <a class='service-image @service.get("subscribed").asText()' href="#" serviceName="@service.get("name")" serviceId="@service.get("id")" onclick="toggleService(this)">
+                    <img src="/assets/images/services/@service.get("logo").asText()"/>
+                </a>
+            }
         </div>
     </div>
 

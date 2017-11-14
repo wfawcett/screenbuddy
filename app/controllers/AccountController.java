@@ -1,28 +1,21 @@
 package controllers;
 
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
-import io.ebean.Ebean;
-import io.ebean.text.json.EJson;
-import io.ebean.text.json.JsonContext;
 import models.Service;
 import models.User;
 import models.UserService;
 import play.Logger;
-import play.data.DynamicForm;
 import play.data.Form;
 import play.data.FormFactory;
-import play.mvc.Http;
+import play.libs.Json;
 import play.mvc.Result;
 import views.html.account;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import static play.mvc.Controller.flash;
-import static play.mvc.Controller.request;
-import static play.mvc.Controller.session;
+import static play.mvc.Controller.*;
 import static play.mvc.Results.badRequest;
 import static play.mvc.Results.ok;
 import static play.mvc.Results.redirect;
@@ -38,20 +31,38 @@ public class AccountController {
             return bounceThem("Authorized Access, please log in");
         }
 
-        List<User> userList = User.find.query()
+        List<User> requestList = User.find.query()
                 .fetch("requests.title", "*")
                 .where().eq("id",usr.id)
                 .findList();
 
-        try{
-            JsonContext json = Ebean.json();
-            String jsonOutput = json.toJson(userList);
-            Logger.debug("########" + jsonOutput);
-        }catch(Exception ex){
-            Logger.debug("@@@@@@@@@@@@badthings");
+        List<ObjectNode> subscribedServices = new ArrayList<ObjectNode>();
+        List<Service> serviceList = Service.find.all();
+
+        for(Service service : serviceList){
+            ObjectNode subscriptionInfo = Json.newObject();
+            // see if the subscription is relevant to the user.
+            int subCount = UserService.find.query().where()
+                    .eq("user_id", usr.id).eq("service_id", service.id).findCount();
+            subscriptionInfo.put("subscribed", (subCount == 1)? "" : "notSubscribed");
+            subscriptionInfo.put("logo", service.logo);
+            subscriptionInfo.put("id", service.id);
+            subscriptionInfo.put("name", service.name);
+            subscribedServices.add(subscriptionInfo);
         }
 
-        return ok(account.render(userList,usr));
+
+
+
+//        try{
+//            JsonContext json = Ebean.json();
+//            String jsonOutput = json.toJson(userList);
+//            Logger.debug("########" + jsonOutput);
+//        }catch(Exception ex){
+//            Logger.debug("@@@@@@@@@@@@badthings");
+//        }
+
+        return ok(account.render(requestList,usr,subscribedServices));
     }
 
     public Result login() {

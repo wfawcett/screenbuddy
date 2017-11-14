@@ -15,6 +15,7 @@ public class Service extends Model {
     @Id
     public Long id;
     public String name;
+    public String logo;
     @OneToMany(mappedBy = "service" )
     public List<UserService> userServices;
 
