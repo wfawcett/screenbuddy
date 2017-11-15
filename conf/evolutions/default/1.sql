@@ -1,3 +1,6 @@
+# --- Created by Ebean DDL
+# To stop Ebean DDL generation, remove this comment and start using Evolutions
+
 # --- !Ups
 
 create table amazon (
@@ -25,6 +28,7 @@ create table request (
 create table service (
   id                            bigint auto_increment not null,
   name                          varchar(255),
+  logo                          varchar(255),
   constraint pk_service primary key (id)
 );
 
