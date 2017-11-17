@@ -1,7 +1,6 @@
 @(userData: List[User])(user: User)(services : List[com.fasterxml.jackson.databind.node.ObjectNode])
 @import views.html.templates.secondary
 
-
 @secondary("Account")("account")(user.name){
     <div class="container">
         <div class="row">
@@ -55,7 +54,7 @@
 
     <script>
         var userId = @user.id;
-        function toggleService(control){
+        function toggleService(control){s
             // organize data
             var $control = $(control),
                 action = $control.hasClass('notSubscribed')? "add" : "remove",

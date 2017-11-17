@@ -23,5 +23,8 @@ public class Redbox extends Model {
 
     public Boolean soon;
 
+    public String title;
+    public Date sortYear;
+
     public static final Finder<Long, Redbox>  find = new Finder<>(Redbox.class);
 }

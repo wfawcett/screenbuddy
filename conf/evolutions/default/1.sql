@@ -15,6 +15,8 @@ create table redbox (
   title_id                      bigint,
   last_seen                     datetime(6),
   soon                          tinyint(1) default 0,
+  title                         varchar(255),
+  sort_year                     datetime(6),
   constraint pk_redbox primary key (id)
 );
 
