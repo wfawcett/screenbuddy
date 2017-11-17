@@ -24,12 +24,15 @@
                 <hr>
                 <ul style="list-style: none">
                 @for(request <- userData.get(0).requests){
-                    <li style="margin-bottom:5px;"><img height= "75" src="//image.tmdb.org/t/p/w92/@request.title.posterPath"/>
-                        <div style="display:inline-block; vertical-align: middle" >
-                            <h5>@request.title.originalTitle</h5>
-                            @request.title.status @request.title.releaseYear<br/>
-                            Average vote: @request.title.voteAverage
-                        </div>
+                    <li style="margin-bottom:5px;">
+                        <a href="/movie/@request.title.tmdbId">
+                            <img height= "75" src="//image.tmdb.org/t/p/w92/@request.title.posterPath"/>
+                            <div style="display:inline-block; vertical-align: middle" >
+                                <h5>@request.title.originalTitle</h5>
+                                @request.title.status @request.title.releaseYear<br/>
+                                Average vote: @request.title.voteAverage
+                            </div>
+                        </a>
                     </li>
                 }
                 </ul>
