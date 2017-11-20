@@ -30,7 +30,7 @@
                             <i class="fa fa-line-chart"></i> Vote Average: @movieData.voteAverage |
                             <i class="fa fa-calendar"></i> Theatrical release date: @movieData.releaseDate.format("dd MMM YYYY")
                         </div>
-                        @partials._movieRequestComponent(userId)(requested)
+                        @partials._movieRequestComponent(userId)(requested)(String.valueOf(movieData.id))
                     </div>
                 </div>
 

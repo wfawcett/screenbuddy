@@ -138,7 +138,7 @@ public class AccountController {
             requested = false;
         }
 
-        return ok(views.html.partials._movieRequestComponent.render(userId,requested));
+        return ok(views.html.partials._movieRequestComponent.render(userId,requested,titleId));
 
     }
 

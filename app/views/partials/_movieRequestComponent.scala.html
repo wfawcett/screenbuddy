@@ -1,4 +1,4 @@
-@(userId: String)(requested: Boolean)()
+@(userId: String)(requested: Boolean)(titleId: String)
 <div id="movieRequestStatus">
 @if(userId == null){
     <p>
@@ -23,7 +23,7 @@
 
 <script>
     var userId = '@userId';
-    var titleId = '1';
+    var titleId = '@titleId';
     function changeRequest(action){
         $('#movieRequestStatus').load("/account/changeRequest", {userId: userId, titleId: titleId, action: action})
     }
