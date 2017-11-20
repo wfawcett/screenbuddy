@@ -1,6 +1,8 @@
 package controllers;
 
+import models.Request;
 import models.Title;
+import play.Logger;
 import play.libs.ws.WSBodyReadables;
 import play.libs.ws.WSBodyWritables;
 import play.libs.ws.WSClient;
@@ -46,8 +48,16 @@ public class SecondaryController extends Controller implements WSBodyReadables, 
 
     public CompletionStage<Result> movie(String movieId) {
         String username = session("username");
+        String userId = session("userid");
+
+        int requestCount =Request.find.query().where()
+                .eq("title.tmdbId", movieId)
+                .eq("user_id", userId)
+                .findCount();
+        Logger.debug("######### requestCount: " + String.valueOf(requestCount));
+        boolean requested = requestCount == 1;
         return Title.getByTmdbId(Integer.valueOf(movieId), ws)
-                .thenApply(movieData -> ok(views.html.movie.render(movieData, username)));
+                .thenApply(movieData -> ok(views.html.movie.render(movieData, username, requested, userId)));
 
     }
 

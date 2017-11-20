@@ -1,4 +1,4 @@
-@(movieData: Title)(username: String)
+@(movieData: Title)(username: String)(requested: Boolean)(userId: String)
 
     @import views.html.templates.secondary
 
@@ -26,16 +26,11 @@
                     <div class="col-sm-6">
                         <h2 class="display-3">@movieData.originalTitle</h2>
                         <p>@movieData.overview</p>
-                        @if(username == null){
-
-                            <p>
-                                <a class="btn btn-primary btn-lg" href="#" role="button">Sign up &raquo;</a>
-                            </p>
-                        }else{
-                            <p>
-                                <a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a>
-                            </p>
-                        }
+                        <div class="movieInfo">
+                            <i class="fa fa-line-chart"></i> Vote Average: @movieData.voteAverage |
+                            <i class="fa fa-calendar"></i> Theatrical release date: @movieData.releaseDate.format("dd MMM YYYY")
+                        </div>
+                        @partials._movieRequestComponent(userId)(requested)
                     </div>
                 </div>
 

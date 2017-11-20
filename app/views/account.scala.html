@@ -14,7 +14,10 @@
                 </h1>
                 <p><i class="fa fa-envelope-o"></i> @user.email</p>
                 <p>
-                    <a href="/changepass">Change password</a> |
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" onclick="$('#myModal').modal()">
+                        Change password
+                    </button>
+
                     <a href="/logout">Logout</a>
                 </p>
             </div>
@@ -52,9 +55,51 @@
         </div>
     </div>
 
+        <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Change password</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <label for="newpass" style="width: 150px;">New Password:</label>
+                    <input type="password" name="newpass" id="newpassfield"/>
+                    <br/>
+                    <label for="newpass" style="width: 150px;">Confirm Password:</label>
+                    <input type="confirmpass" name="confirmpass" id="confirmpassfield"/>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="changePass()">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         var userId = @user.id;
-        function toggleService(control){s
+
+        function changePass(){
+            var newPass = $("#newpassfield").val();
+            var confPass = $("#confirmpassfield").val();
+            if(newPass === confPass){
+                $.post("/account/changePass", {userId: userId, newPass: newPass})
+                        .done(function(){
+                            toastr.info("Password changed");
+                            $("#myModal").modal("hide")
+                        })
+                        .fail( function(xhr, textStatus, errorThrown) {
+                            toastr["error"](errorThrown);
+                        })
+            }else{
+                toastr.error("New password and confirmation don't match");
+            }
+        }
+        function toggleService(control){
             // organize data
             var $control = $(control),
                 action = $control.hasClass('notSubscribed')? "add" : "remove",

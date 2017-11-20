@@ -1,0 +1,30 @@
+@(userId: String)(requested: Boolean)()
+<div id="movieRequestStatus">
+@if(userId == null){
+    <p>
+        Get notified when this is available <br/>
+        <a class="btn btn-primary btn-lg" href="/signup" role="button">Sign up now!</a>
+    </p>
+}else{
+    @if(requested){
+        <p>
+            <p>This item is in your request list!  We will let you know when its available</p>
+            <button onclick="changeRequest('remove')" type="button" class="btn btn-success"><i class="fa fa-minus-square"></i> Remove</button>
+        </p>
+    }else{
+        <p>
+            <p>Add this item to your request list and we will let you know when it is available</p>
+            <button onclick="changeRequest('add')" type="button" class="btn btn-success"><i class="fa fa-plus-square"></i> Add</button>
+        </p>
+
+    }
+}
+</div>
+
+<script>
+    var userId = '@userId';
+    var titleId = '1';
+    function changeRequest(action){
+        $('#movieRequestStatus').load("/account/changeRequest", {userId: userId, titleId: titleId, action: action})
+    }
+</script>

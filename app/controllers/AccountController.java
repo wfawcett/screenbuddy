@@ -1,11 +1,10 @@
 package controllers;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
-import models.Service;
-import models.User;
-import models.UserService;
+import models.*;
 import play.Logger;
 import play.data.Form;
 import play.data.FormFactory;
@@ -102,6 +101,45 @@ public class AccountController {
     public Result bounceThem(String message) {
         flash("authentication", message);
         return redirect("/login");
+    }
+
+    public Result changePass(){
+        try{
+            Map<String,String[]> formData = request().body().asFormUrlEncoded();
+            String userId = (formData.get("userId")[0]);
+            String newPass = (formData.get("newPass")[0]);
+            User user = User.find.byId(Long.valueOf(userId));
+            user.updatePassword(newPass);
+            return ok();
+        }catch (Exception ex){
+            return badRequest (ex.getMessage());
+        }
+    }
+
+    public Result changeRequest(){
+        Map<String,String[]> formData = request().body().asFormUrlEncoded(); Logger.debug("formData: ", formData.toString());
+
+        String titleId = (formData.get("titleId")[0]); Logger.debug("titleId: ", titleId);
+        String userId = (formData.get("userId")[0]); Logger.debug("userID: ", userId);
+        String action = formData.get("action")[0]; Logger.debug("action: ", action);
+        Boolean requested = false;
+        if(action.equals("add")){
+            Request request = new Request();
+            request.user = User.find.byId(Long.valueOf(userId));
+            request.title = Title.find.byId(Long.valueOf(titleId));
+            request.insert();
+            requested = true;
+        }else{
+            Request request = Request.find.query().where()
+                    .eq("user_id", userId)
+                    .eq("title_id", titleId)
+                    .findOne();
+            request.delete();
+            requested = false;
+        }
+
+        return ok(views.html.partials._movieRequestComponent.render(userId,requested));
+
     }
 
     public Result changeService(){

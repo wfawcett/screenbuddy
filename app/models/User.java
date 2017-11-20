@@ -39,4 +39,10 @@ public class User extends Model {
         }
         return usr;
     }
+
+    public void updatePassword(String newPassword){
+        String hashPass = DigestUtils.sha1Hex(newPassword);
+        this.hashPass = hashPass;
+        this.update();
+    }
 }

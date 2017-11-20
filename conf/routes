@@ -12,10 +12,12 @@ GET         /search/*phrase              controllers.SecondaryController.searchR
 POST        /register                    controllers.UserController.registerUser
 
 GET         /account                    controllers.AccountController.index
-GET         /login                       controllers.AccountController.login
-GET         /logout                       controllers.AccountController.logout
-POST        /account/authenticate        controllers.AccountController.authenticate
+GET         /login                      controllers.AccountController.login
+GET         /logout                     controllers.AccountController.logout
+POST        /account/authenticate       controllers.AccountController.authenticate
 POST        /account/serviceChange      controllers.AccountController.changeService
+POST        /account/changePass         controllers.AccountController.changePass
+POST        /account/changeRequest      controllers.AccountController.changeRequest
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /public/*file                controllers.Assets.versioned(path="/public", file: Asset)
