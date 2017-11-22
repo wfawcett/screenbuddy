@@ -4,6 +4,7 @@ import java.util.*;
 import javax.persistence.*;
 
 import io.ebean.*;
+import play.Logger;
 import play.data.format.*;
 import play.data.validation.*;
 
@@ -27,4 +28,8 @@ public class Redbox extends Model {
     public Date sortYear;
 
     public static final Finder<Long, Redbox>  find = new Finder<>(Redbox.class);
+
+    public static void crawl(){
+        Logger.debug("####################### Starting Redbox Crawl");
+    }
 }

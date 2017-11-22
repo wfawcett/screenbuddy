@@ -25,6 +25,6 @@ public class Amazon extends Model {
     public static final Finder<Long, Amazon> find = new Finder<>(Amazon.class);
 
     public static void crawl(){
-        Logger.debug("Starting Amazon Crawl");
+        Logger.debug("####################### Starting Amazon Crawl");
     }
 }
