@@ -7,6 +7,7 @@ create table amazon (
   id                            bigint auto_increment not null,
   title_id                      integer not null,
   last_seen                     datetime(6),
+  available                     tinyint(1) default 0,
   constraint pk_amazon primary key (id)
 );
 

@@ -14,7 +14,6 @@ import java.util.concurrent.CompletionStage;
 
 public class SecondaryController extends Controller implements WSBodyReadables, WSBodyWritables {
     private final WSClient ws;
-
     @Inject
     public SecondaryController(WSClient ws) {
         this.ws = ws;
