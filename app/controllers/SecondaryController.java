@@ -1,7 +1,9 @@
 package controllers;
 
 import models.Request;
+import models.Service;
 import models.Title;
+import models.User;
 import play.Logger;
 import play.libs.ws.WSBodyReadables;
 import play.libs.ws.WSBodyWritables;
@@ -10,6 +12,9 @@ import play.mvc.Controller;
 import play.mvc.Result;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.CompletionStage;
 
 public class SecondaryController extends Controller implements WSBodyReadables, WSBodyWritables {
@@ -23,6 +28,21 @@ public class SecondaryController extends Controller implements WSBodyReadables, 
         String username = session("username");
         return ok(views.html.signup.render(username) );
 
+    }
+
+    public Result mailer(String userId){
+        User user = User.find.query().where().eq("id", userId).findOne();
+        HashMap<User,HashMap<Title,List<Service>>> movieData = Request.getMovieUpdates();
+        HashMap<Title,List<Service>> userdata = movieData.get(user);
+        List<Title> titles = new ArrayList<Title>(userdata.keySet());
+        String subject;
+        if(titles.size() == 1){
+            Title title = titles.get(0);
+            subject = "Your movie " + title.originalTitle + " is available!";
+        }else{
+            subject = "You have new movies available";
+        }
+        return ok(views.html.mailers.movieMailer.render(userdata, user, subject));
     }
 
     public Result search() {

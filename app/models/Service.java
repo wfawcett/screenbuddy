@@ -19,6 +19,7 @@ public class Service extends Model {
     @OneToMany(mappedBy = "service" )
     public List<UserService> userServices;
 
+
     public static final Finder<Long, Service> find = new Finder<>(Service.class);
 
 }

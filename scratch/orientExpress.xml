@@ -1,0 +1,70 @@
+<?xml version="1.0" ?>
+<ItemSearchResponse xmlns="http://webservices.amazon.com/AWSECommerceService/2011-08-01">
+	<OperationRequest>
+		<HTTPHeaders>
+			<Header Name="UserAgent" Value="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36"/>
+		</HTTPHeaders>
+		<RequestId>6e8d032d-7a54-41be-9f17-428541db0e9a</RequestId>
+		<Arguments>
+			<Argument Name="AWSAccessKeyId" Value="AKIAIX4GZ4HGMFXJHD3A"/>
+			<Argument Name="AssociateTag" Value="wfawcett"/>
+			<Argument Name="Availability" Value="Available"/>
+			<Argument Name="BrowseNode" Value="2858778011"/>
+			<Argument Name="Keywords" Value="Kenneth Branagh"/>
+			<Argument Name="Operation" Value="ItemSearch"/>
+			<Argument Name="ResponseGroup" Value="OfferListings"/>
+			<Argument Name="SearchIndex" Value="UnboxVideo"/>
+			<Argument Name="Service" Value="AWSECommerceService"/>
+			<Argument Name="Timestamp" Value="2017-11-26T02:32:47Z"/>
+			<Argument Name="Title" Value="Murder on the Orient Express"/>
+			<Argument Name="Signature" Value="CnSYHvzKMiKG2RTanUKN75KsF2fO5BQ6IwIUU7r8Pt4="/>
+		</Arguments>
+		<RequestProcessingTime>0.0613391450000000</RequestProcessingTime>
+	</OperationRequest>
+	<Items>
+		<Request>
+			<IsValid>True</IsValid>
+			<ItemSearchRequest>
+				<Availability>Available</Availability>
+				<BrowseNode>2858778011</BrowseNode>
+				<Keywords>Kenneth Branagh</Keywords>
+				<ResponseGroup>OfferListings</ResponseGroup>
+				<SearchIndex>UnboxVideo</SearchIndex>
+				<Title>Murder on the Orient Express</Title>
+			</ItemSearchRequest>
+		</Request>
+		<TotalResults>1</TotalResults>
+		<TotalPages>1</TotalPages>
+		<MoreSearchResultsUrl>https://www.amazon.com/gp/search?linkCode=xm2&amp;node=2858778011&amp;SubscriptionId=AKIAIX4GZ4HGMFXJHD3A&amp;keywords=Kenneth%20Branagh%20Murder%20on%20the%20Orient%20Express&amp;tag=wfawcett&amp;creative=386001&amp;url=search-alias%3Dinstant-video&amp;camp=2025</MoreSearchResultsUrl>
+		<Item>
+			<ASIN>B0771Y8B94</ASIN>
+			<Offers>
+				<TotalOffers>1</TotalOffers>
+				<TotalOfferPages>1</TotalOfferPages>
+				<MoreOffersUrl>https://www.amazon.com/gp/offer-listing/B0771Y8B94?SubscriptionId=AKIAIX4GZ4HGMFXJHD3A&amp;tag=wfawcett&amp;linkCode=xm2&amp;camp=2025&amp;creative=386001&amp;creativeASIN=B0771Y8B94</MoreOffersUrl>
+				<Offer>
+					<OfferAttributes>
+						<Condition>New</Condition>
+					</OfferAttributes>
+					<OfferListing>
+						<OfferListingId>AvyFDXULh7Y6pP2p01fJz0E72p%2BdYIigNS9KjM2lNfJnk1MGAJkTsOFpmh1AZNCEgX3%2FBOts%2BkKkswgeL7pcdppMST4Q5anQ8k6Bq3en4uTRhe0U04sTiAEO%2FXCRI%2BgbDvmuU2Pq8OijwJPxcH3Bb8FglMxYIn8x</OfferListingId>
+						<Price>
+							<Amount>1499</Amount>
+							<CurrencyCode>USD</CurrencyCode>
+							<FormattedPrice>$14.99</FormattedPrice>
+						</Price>
+						<Availability>Not yet released</Availability>
+						<AvailabilityAttributes>
+							<AvailabilityType>now</AvailabilityType>
+							<IsPreorder>1</IsPreorder>
+							<MinimumHours>24</MinimumHours>
+							<MaximumHours>48</MaximumHours>
+						</AvailabilityAttributes>
+						<IsEligibleForSuperSaverShipping>0</IsEligibleForSuperSaverShipping>
+						<IsEligibleForPrime>0</IsEligibleForPrime>
+					</OfferListing>
+				</Offer>
+			</Offers>
+		</Item>
+	</Items>
+</ItemSearchResponse>

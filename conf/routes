@@ -24,3 +24,4 @@ GET         /public/*file                controllers.Assets.versioned(path="/pub
 GET         /assets/*file                controllers.Assets.versioned(path="/public", file: Asset)
 
 GET         /movie/*movieId              controllers.SecondaryController.movie(movieId: String)
+GET         /mailer/*userid              controllers.SecondaryController.mailer(userid: String)

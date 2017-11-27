@@ -37,6 +37,7 @@ public class Title extends Model {
     public Double voteAverage;
     public int voteCount;
     public Double popularity;
+    public String castLead;
 
     public static final Finder<Long, Title> find = new Finder<>(Title.class);
 
@@ -62,6 +63,14 @@ public class Title extends Model {
         this.popularity= api.get("popularity").asDouble();
 
         try{
+            this.castLead = api.get("credits").get("cast").get(0).get("name").asText();
+        }catch (Exception ex){
+            Logger.warn("Missing credits info", ex);
+        }
+
+
+
+        try{
             DateFormat format = new SimpleDateFormat("yyyy-M-d", Locale.ENGLISH);
             Date parsedDate = format.parse(api.get("release_date").asText());
             String yearString =(new SimpleDateFormat("yyyy")).format(parsedDate);
@@ -85,6 +94,7 @@ public class Title extends Model {
     public static CompletionStage<Title> asyncGetFromApiById(int tmdbId, WSClient ws){
         return ws.url("https://api.themoviedb.org/3/movie/" + tmdbId)
                 .addQueryParameter("api_key", "274472d0b063eec06615cfed6a703b95")
+                .addQueryParameter("append_to_response", "credits")
                 .get()
                 .thenApply(response -> {
                     Title newTitle = new Title(response.asJson(),ws);
@@ -108,7 +118,7 @@ public class Title extends Model {
             Title existing = Ebean.find(Title.class).where().eq("originalTitle", title ).eq("releaseYear", releaseYear).findOne();
             if(existing != null){ // we found one record, lets link it and we are done.
                 Redbox newRedbox = new Redbox();
-                newRedbox.titleId = existing.id;
+                newRedbox.title.id = existing.id;
                 newRedbox.lastSeen = Calendar.getInstance().getTime();
                 newRedbox.soon = soon;
                 newRedbox.save();
