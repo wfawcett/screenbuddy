@@ -73,7 +73,6 @@ public class Request extends Model {
     public static final Finder<Long, Request> find = new Finder<>(Request.class);
 
     public static void crawl(MailerClient mailerClient){
-        Logger.debug("####################### Starting Request Crawl");
         HashMap<User,HashMap<Title,List<Service>>> userTitleMap = getMovieUpdates();
         // now there should be a map of users with their available movies loaded into it.
         for(User user: userTitleMap.keySet()){

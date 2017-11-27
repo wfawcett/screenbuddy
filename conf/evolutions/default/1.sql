@@ -19,7 +19,6 @@ create table redbox (
   soon                          tinyint(1) default 0,
   service_id                    bigint not null,
   title_name                    varchar(255),
-  sort_year                     integer not null,
   constraint pk_redbox primary key (id)
 );
 

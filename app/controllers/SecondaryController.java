@@ -1,5 +1,6 @@
 package controllers;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import models.Request;
 import models.Service;
 import models.Title;
@@ -52,17 +53,23 @@ public class SecondaryController extends Controller implements WSBodyReadables, 
 
     public CompletionStage<Result> searchResults(String phrase) {
         String username = session("username");
+        return searchTmdb(ws, phrase)
+                .thenApply(result ->{
+                    int resultCount = result.get("total_results").asInt();
+                    resultCount = resultCount > 10 ? 10 : resultCount;
+                    return ok(views.html.searchResults.render(result,resultCount, username));
+                });
+    }
+
+    public static CompletionStage<JsonNode> searchTmdb(WSClient ws, String phrase){
+        phrase = phrase.replaceAll("\\%20", "+");
         return ws.url("https://api.themoviedb.org/3/search/movie")
                 .addQueryParameter("api_key", "274472d0b063eec06615cfed6a703b95")
                 .addQueryParameter("language", "en-US")
                 .addQueryParameter("query", phrase)
                 .addQueryParameter("page", "1")
                 .addQueryParameter("'include_adult'", "false")
-                .get().thenApply(response ->{
-                    int resultCount = response.asJson().get("total_results").asInt();
-                    resultCount = resultCount > 10 ? 10 : resultCount;
-                    return ok(views.html.searchResults.render(response.asJson(),resultCount, username));
-                });
+                .get().thenApply(response -> response.asJson());
     }
 
     public CompletionStage<Result> movie(String movieId) {

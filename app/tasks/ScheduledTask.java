@@ -31,38 +31,41 @@ public class ScheduledTask {
     }
 
     private void initialize(){
-        this.actorSystem.scheduler().scheduleOnce(Duration.create(1, TimeUnit.SECONDS),() -> Amazon.setup(),this.executionContext);
-        this.actorSystem.scheduler().scheduleOnce(Duration.create(1, TimeUnit.SECONDS),() -> Redbox.setup(),this.executionContext);
-
-        // Redbox Crawler: Get all the redbox data.
-        this.actorSystem.scheduler().scheduleOnce(
-                Duration.create(1, TimeUnit.SECONDS),
-                () -> Redbox.crawl(this.ws),
-                this.executionContext);
-
+//        this.actorSystem.scheduler().scheduleOnce(Duration.create(1, TimeUnit.SECONDS),() -> Amazon.setup(),this.executionContext);
+//        this.actorSystem.scheduler().scheduleOnce(Duration.create(1, TimeUnit.SECONDS),() -> Redbox.setup(),this.executionContext);
+//
+        // Redbox Crawler: Get all the redbox data. once every 24 hours
         this.actorSystem.scheduler().schedule(
                 Duration.create(1, TimeUnit.SECONDS), // initialDelay
-                Duration.create(10, TimeUnit.SECONDS), // interval
-                () -> Redbox.titleLinker(),
+                Duration.create(24, TimeUnit.HOURS), // interval
+                () -> Redbox.crawl(this.ws),
                 this.executionContext
         );
-
-
-
-        // Amazon Crawler: starts after one second and runs every few seconds until it runs out of titles to crawl.
+//
+//        // link redbox data to title, limit how many at a time so we don't kill our api limits. run every 10 seconds
         this.actorSystem.scheduler().schedule(
                 Duration.create(1, TimeUnit.SECONDS), // initialDelay
                 Duration.create(5, TimeUnit.SECONDS), // interval
-                () -> Amazon.crawl(),
+                () -> Redbox.titleLinker(this.ws),
                 this.executionContext
         );
-
-        // Request Crawler: 30 minutes later run requester service crawl and
-        // and send emails.
-        this.actorSystem.scheduler().scheduleOnce(
-                Duration.create(1, TimeUnit.SECONDS),
-                () -> Request.crawl(mailerClient),
-                this.executionContext);
+//
+//        // Amazon Crawler: starts after one second and runs every 10 seconds until it runs out of titles to crawl.
+//        this.actorSystem.scheduler().schedule(
+//                Duration.create(1, TimeUnit.SECONDS), // initialDelay
+//                Duration.create(10, TimeUnit.SECONDS), // interval
+//                () -> Amazon.crawl(),
+//                this.executionContext
+//        );
+//
+//        // Request Crawler: 30 minutes later run requester service crawl and
+//        // and send emails.
+//        this.actorSystem.scheduler().schedule(
+//                Duration.create(1, TimeUnit.SECONDS), // initialDelay
+//                Duration.create(30, TimeUnit.SECONDS), // interval
+//                () -> Request.crawl(mailerClient),
+//                this.executionContext
+//        );
     }
 
 

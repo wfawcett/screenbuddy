@@ -56,7 +56,6 @@ public class Amazon extends Model {
     }
 
     public static void crawl(){
-        Logger.debug("########## Firing Amazon Crawl ################");
         // get a list of requested movies we need to check amazon with.
         // titleIds from request that are either missing or available = false
         String sql ="SELECT t.id,  t.tmdb_id,  t.backdrop_path,  t.original_language,  t.overview,   " +
@@ -101,8 +100,6 @@ public class Amazon extends Model {
                 amazon.available = isAvailable;
                 amazon.update();
             }
-        }else{
-            Logger.info("Crawler out of data to crawl.");
         }
     }
 }
