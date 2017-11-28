@@ -31,9 +31,9 @@ public class ScheduledTask {
     }
 
     private void initialize(){
-//        this.actorSystem.scheduler().scheduleOnce(Duration.create(1, TimeUnit.SECONDS),() -> Amazon.setup(),this.executionContext);
-//        this.actorSystem.scheduler().scheduleOnce(Duration.create(1, TimeUnit.SECONDS),() -> Redbox.setup(),this.executionContext);
-//
+        this.actorSystem.scheduler().scheduleOnce(Duration.create(1, TimeUnit.SECONDS),() -> Amazon.setup(),this.executionContext);
+        this.actorSystem.scheduler().scheduleOnce(Duration.create(1, TimeUnit.SECONDS),() -> Redbox.setup(),this.executionContext);
+
         // Redbox Crawler: Get all the redbox data. once every 24 hours
         this.actorSystem.scheduler().schedule(
                 Duration.create(1, TimeUnit.SECONDS), // initialDelay
@@ -45,8 +45,8 @@ public class ScheduledTask {
 //        // link redbox data to title, limit how many at a time so we don't kill our api limits. run every 10 seconds
         this.actorSystem.scheduler().schedule(
                 Duration.create(1, TimeUnit.SECONDS), // initialDelay
-                Duration.create(5, TimeUnit.SECONDS), // interval
-                () -> Redbox.titleLinker(this.ws),
+                Duration.create(20, TimeUnit.SECONDS), // interval
+                () -> Redbox.titleLinker(this.ws, 10),
                 this.executionContext
         );
 //

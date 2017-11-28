@@ -2,10 +2,8 @@ package models;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import controllers.SecondaryController;
-import io.ebean.Finder;
-import io.ebean.Model;
-import io.ebean.RawSql;
-import io.ebean.RawSqlBuilder;
+import helpers.Levenshtein;
+import io.ebean.*;
 import play.Logger;
 import play.data.format.Formats;
 import play.libs.Json;
@@ -68,7 +66,8 @@ public class Redbox extends Model {
         return available;
     }
 
-    public static void titleLinker(WSClient ws){
+    public static void titleLinker(WSClient ws, int maxRows){
+        Logger.debug("######## running titleLinker ########");
         // get all the title_id null records:
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.MINUTE, -5);
@@ -79,51 +78,49 @@ public class Redbox extends Model {
                 .or()
                     .lt("last_seen", lookback).eq("last_seen", null)
                 .endOr()
-                .setMaxRows(2)
+                .setMaxRows(maxRows)
                 .findList();
         for(Redbox redbox : redboxes){
-            String cleanName = StringEscapeUtils.escapeEcmaScript(redbox.titleName);
-            Logger.debug("working on: " + cleanName);
-            String sql = "select id, tmdb_id, backdrop_path, original_language, overview, poster_path, release_date, " +
-                    "release_year, status, tagline, original_title, vote_average, vote_count, popularity, " +
-                    "match(original_title) against('" + cleanName + "' in natural language mode) as score " +
-                    "from title " +
-                    "where match(original_title) against('" + cleanName + "' in natural language mode)" +
-                    "HAVING score > 0.7";
-            RawSql rawSql = RawSqlBuilder.parse(sql)
-                    .columnMapping("id", "id")
-                    .columnMapping("tmdb_id", "tmdbId")
-                    .columnMapping("backdrop_path", "backdropPath")
-                    .columnMapping("original_language", "originalLanguage")
-                    .columnMapping("overview", "overview")
-                    .columnMapping("poster_path", "posterPath")
-                    .columnMapping("release_date", "releaseDate")
-                    .columnMapping("release_year", "releaseYear")
-                    .columnMapping("status", "status")
-                    .columnMapping("tagline", "tagline")
-                    .columnMapping("original_title", "originalTitle")
-                    .columnMapping("vote_average", "voteAverage")
-                    .columnMapping("vote_count", "voteCount")
-                    .columnMapping("popularity", "popularity")
-                    .columnMappingIgnore("score")
-                    .create();
-            Title title = Title.find.query().setRawSql(rawSql).findOne();
+            String cleanName = redbox.titleName.replaceAll("\\([^\\)]*\\)", ""); // strip the (2017) style dates from titles.
+            cleanName = StringEscapeUtils.escapeEcmaScript(redbox.titleName); // escape illegal characters.
+            Boolean dbMatchFound = false;
 
-            redbox.lastSeen = new Date();
+            // A bit tricky: use the full text index to find a title that is similar to the redbox title.
+            // we then need to score the candidate title against the redbox name and if we are better than 60% we accept the match.
+            String candidateSql = "SELECT original_title FROM title WHERE MATCH(original_title) AGAINST(:title IN NATURAL LANGUAGE MODE) limit 1";
+            SqlRow candidate = Ebean.createSqlQuery(candidateSql).setParameter("title", cleanName).findOne();
+            if(candidate != null){
+                String candidateName = candidate.getString("original_title");
+                Logger.debug("@@ Scoring: " + candidateName + " for " + cleanName);
+                String scoreSql = "SELECT id, original_title, " +
+                        "MATCH(original_title) AGAINST(:title IN NATURAL LANGUAGE MODE) / MATCH(original_title) AGAINST(:candidate IN NATURAL LANGUAGE MODE) AS score " +
+                        "FROM title " +
+                        "WHERE MATCH(original_title) AGAINST(:title IN NATURAL LANGUAGE MODE) " +
+                        "HAVING score > 0.6 limit 1";
+                SqlRow score = Ebean.createSqlQuery(scoreSql)
+                        .setParameter("title", cleanName)
+                        .setParameter("candidate", candidateName)
+                        .findOne();
+                if(score != null){
+                    String existingId = score.getString("id");
+                    Title title = Title.find.byId(Long.valueOf(existingId));
+                    redbox.title = title;
+                    redbox.lastSeen = new Date();
+                    dbMatchFound = true;
+                    redbox.save();
+                }
+            }
 
-            if(title != null){ // we have a match in the database
-                Logger.debug("found in the database");
-                redbox.title = title;
-
-                redbox.save();
-            }else{ // need to go to tmdb to get the info.
+            // The database match failed so we need to go out to TMDB to get the data.
+            if(dbMatchFound == false) { // need to go to tmdb to get the info.
                 Logger.debug("Getting data from tmdb for: " + redbox.titleName);
                 cleanName = redbox.titleName.replaceAll("\\([^\\)]*\\)", "");
-                SecondaryController.searchTmdb(ws, cleanName )
-                        .thenApply((response) ->{
+                SecondaryController.searchTmdb(ws, cleanName)
+                        .thenApply((response) -> {
                             Logger.debug("got response from searchTmdb for: " + redbox.titleName);
-                            JsonNode topResult = response.get("results").get(0); Logger.debug("topResult: " + Json.stringify(topResult));
-                            if(topResult == null){
+                            JsonNode topResult = response.get("results").get(0);
+                            Logger.debug("topResult: " + Json.stringify(topResult));
+                            if (topResult == null) {
                                 redbox.save();
                                 return null; // stop processing.
                             }
@@ -134,25 +131,23 @@ public class Redbox extends Model {
                                         Logger.debug("Got titledata from TMDB");
                                         redbox.title = newTitle;
                                         redbox.save();
-                                        return title;
+                                        return newTitle;
                                     });
                         });
             }
-
-
-
         }
-
 
     }
 
     public static void crawl(WSClient ws){
+        Logger.debug("######## running redbox crawl ########");
         ws.url("http://www.redbox.com/api/product/js/__titles").get()
                 .thenApply((response)->{
                     String body = response.getBody();
                     body = body.replace("var __titles = ", "");
                     JsonNode titleData = Json.parse(body);
                     for(JsonNode title : titleData){
+                        Logger.debug("--- got a title: " + title.get("sortName").asText());
                         // productType 1 = movie, 5 = video game
                         // fmt 1 = dvd, 2 = blu-ray (blu-ray sometimes adds blu ray to the title, or sortName, so ignore them);
                         // soon = 1 means it isn't available yet. so ignore it.
