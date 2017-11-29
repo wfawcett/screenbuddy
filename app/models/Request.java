@@ -38,36 +38,35 @@ public class Request extends Model {
     }
 
     public static HashMap<User,HashMap<Title,List<RequestService>>> getMovieUpdates(){
-        List<RequestService> requestServices = RequestService.find.query().where().eq("complete", false).findList();
+        HashMap<User,HashMap<Title,List<RequestService>>> allUserData = new HashMap<>();
 
-        HashMap<User,HashMap<Title,List<RequestService>>> userTitleMap = new HashMap<User,HashMap<Title,List<RequestService>>>();
-        HashMap<Title,List<RequestService>> titleServiceMap = new HashMap<Title,List<RequestService>>();
-        List<RequestService> availableServices = new ArrayList<>();
+        List<RequestService> requestServices = RequestService.find.query().where().eq("complete", false).findList();
         for(RequestService requestService : requestServices){
             User user = requestService.request.user;
             Title title = requestService.request.title;
+            boolean requestAvailable = false;
 
             if(requestService.service.name.equals("Redbox") && Redbox.isAvailable(title)){
                 Redbox redbox = Redbox.get(title);
                 Logger.debug("adding " +redbox.title.originalTitle + " to redbox availability ");
                 requestService.url = redbox.url;
-                availableServices.add(requestService);
+                requestAvailable = true;
             }
 
             if(requestService.service.name.equals("Amazon") && Amazon.isAvailable(title)){
                 Amazon amazon = Amazon.get(title);
                 Logger.debug("adding " +amazon.title.originalTitle + " to amazon availability ");
                 requestService.url = amazon.url;
-                availableServices.add(requestService);
+                requestAvailable = true;
             }
 
-            if(availableServices.size() > 0){
-                Logger.debug("availableServices size: " + availableServices.size());
-                titleServiceMap.put(title, availableServices); // Title: [Service1, Service2]
-                userTitleMap.put(user, titleServiceMap);
+            if(requestAvailable){
+                if(allUserData.get(user) == null){allUserData.put(user, new HashMap<>());}
+                if(allUserData.get(user).get(title) == null){allUserData.get(user).put(title, new ArrayList<>());}
+                allUserData.get(user).get(title).add(requestService);
             }
         }
-        return userTitleMap;
+        return allUserData;
     }
 
 
@@ -78,7 +77,7 @@ public class Request extends Model {
         // now there should be a map of users with their available movies loaded into it.
         for(User user: userTitleMap.keySet()){
             Map<Title,List<RequestService>> movieInfo = userTitleMap.get(user);
-            List<Title> titles = new ArrayList<Title>(movieInfo.keySet());
+            List<Title> titles = new ArrayList<>(movieInfo.keySet());
             String subject;
             if(titles.size() == 1){
                 Title title = titles.get(0);
