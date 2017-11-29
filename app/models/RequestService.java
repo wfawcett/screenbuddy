@@ -22,6 +22,8 @@ public class RequestService extends Model {
 
     public Boolean complete;
 
+    public String url;
+
     public static final Finder<Long, RequestService> find = new Finder<>(RequestService.class);
 
 }

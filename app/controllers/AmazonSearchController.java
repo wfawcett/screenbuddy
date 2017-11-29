@@ -52,9 +52,9 @@ public class AmazonSearchController{
         return topResult==null;
     }
 
-    public boolean isTitleAvailableOnAmazon(Title titleRecord){
+    public String getAmazonUrl(Title titleRecord){
+        String amazonUrl = null;
         Logger.debug("Checking: " + titleRecord.originalTitle + ": " + titleRecord.castLead);
-        Boolean answer = false; // pessimistic default
         Map<String, String> params = new HashMap<String, String>();
         params.put("Title", titleRecord.originalTitle);
 
@@ -71,34 +71,28 @@ public class AmazonSearchController{
         String availability = XPath.selectText("/ItemSearchResponse/Items/Item[1]/Offers/Offer/OfferListing/Availability", results); // Not yet released | Usually ships in 1-2 business days |
         String availabilityType = XPath.selectText("/ItemSearchResponse/Items/Item[1]/Offers/Offer/OfferListing/AvailabilityAttributes/AvailabilityType", results);
         String isPreorder = XPath.selectText("/ItemSearchResponse/Items/Item[1]/Offers/Offer/OfferListing/AvailabilityAttributes/IsPreorder", results);
+        String offerUrl = XPath.selectText("/ItemSearchResponse/Items/Item[1]/Offers/MoreOffersUrl", results);
 
         if(isEmptyResults(results)){ // the search result didn't have a first item so it didn't find our movie.
-            answer = false;
-            return answer;
+            return amazonUrl;
         }
-
-        Logger.debug("topResult wan't null");
 
         if(availability == null || availability.equals("") || availability.equals("Not yet released")){
             Logger.debug("Marking unavailable because availability response was: " + availability);
-            answer = false;
-            return answer;
+            return amazonUrl;
         }
-
-        Logger.debug("looks like we availability data");
 
         if(availabilityType.equals("now")){
             if(isPreorder.equals("1")){
-                answer = false;
                 Logger.debug("bummer, preorder");
             }else{
-                answer = true;
+                amazonUrl = offerUrl;
                 Logger.debug("looks like we have it. ");
             }
         }else{
             Logger.debug("weird, the type was|" + availabilityType + "|" );
         }
-        return answer;
+        return amazonUrl;
     }
 
     public static String getAmazonSearchUrl(Map<String, String> params){

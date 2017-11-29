@@ -1,10 +1,7 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import models.Request;
-import models.Service;
-import models.Title;
-import models.User;
+import models.*;
 import play.Logger;
 import play.libs.ws.WSBodyReadables;
 import play.libs.ws.WSBodyWritables;
@@ -33,17 +30,23 @@ public class SecondaryController extends Controller implements WSBodyReadables, 
 
     public Result mailer(String userId){
         User user = User.find.query().where().eq("id", userId).findOne();
-        HashMap<User,HashMap<Title,List<Service>>> movieData = Request.getMovieUpdates();
-        HashMap<Title,List<Service>> userdata = movieData.get(user);
-        List<Title> titles = new ArrayList<Title>(userdata.keySet());
-        String subject;
-        if(titles.size() == 1){
-            Title title = titles.get(0);
-            subject = "Your movie " + title.originalTitle + " is available!";
+        HashMap<User,HashMap<Title,List<RequestService>>> movieData = Request.getMovieUpdates();
+        HashMap<Title,List<RequestService>> userdata = movieData.get(user);
+        if(userdata != null){
+            List<Title> titles = new ArrayList<Title>(userdata.keySet());
+            String subject;
+            if(titles.size() == 1){
+                Title title = titles.get(0);
+                subject = "Your movie " + title.originalTitle + " is available!";
+            }else{
+                subject = "You have new movies available";
+            }
+            return ok(views.html.mailers.movieMailer.render(userdata, user, subject));
         }else{
-            subject = "You have new movies available";
+            return ok();// nothing
         }
-        return ok(views.html.mailers.movieMailer.render(userdata, user, subject));
+
+
     }
 
     public Result search() {
@@ -80,7 +83,7 @@ public class SecondaryController extends Controller implements WSBodyReadables, 
                 .eq("title.tmdbId", movieId)
                 .eq("user_id", userId)
                 .findCount();
-        Logger.debug("######### requestCount: " + String.valueOf(requestCount));
+
         boolean requested = requestCount == 1;
         return Title.getByTmdbId(Integer.valueOf(movieId), ws)
                 .thenApply(movieData -> ok(views.html.movie.render(movieData, username, requested, userId)));

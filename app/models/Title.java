@@ -65,7 +65,7 @@ public class Title extends Model {
         try{
             this.castLead = api.get("credits").get("cast").get(0).get("name").asText();
         }catch (Exception ex){
-            Logger.warn("Missing credits info", ex);
+            Logger.warn(this.originalTitle + " is missing credits its info", ex);
         }
 
 
@@ -76,9 +76,8 @@ public class Title extends Model {
             String yearString =(new SimpleDateFormat("yyyy")).format(parsedDate);
             this.releaseYear = Integer.parseInt(yearString);
             this.releaseDate = parsedDate;
-            Logger.debug("########okay so far");
         }catch (Exception ex){
-            Logger.error("ParseException: " + ex.toString());
+            Logger.error("ParseException: ", ex);
             this.releaseDate = null;
         }
     }

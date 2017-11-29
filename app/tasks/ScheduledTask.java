@@ -41,31 +41,31 @@ public class ScheduledTask {
                 () -> Redbox.crawl(this.ws),
                 this.executionContext
         );
-//
-//        // link redbox data to title, limit how many at a time so we don't kill our api limits. run every 10 seconds
+
+        // link redbox data to title, limit how many at a time so we don't kill our api limits. run every 20 seconds
         this.actorSystem.scheduler().schedule(
                 Duration.create(1, TimeUnit.SECONDS), // initialDelay
                 Duration.create(20, TimeUnit.SECONDS), // interval
-                () -> Redbox.titleLinker(this.ws, 10),
+                () -> Redbox.titleLinker(this.ws, 10, 60),
                 this.executionContext
         );
-//
-//        // Amazon Crawler: starts after one second and runs every 10 seconds until it runs out of titles to crawl.
-//        this.actorSystem.scheduler().schedule(
-//                Duration.create(1, TimeUnit.SECONDS), // initialDelay
-//                Duration.create(10, TimeUnit.SECONDS), // interval
-//                () -> Amazon.crawl(),
-//                this.executionContext
-//        );
-//
-//        // Request Crawler: 30 minutes later run requester service crawl and
-//        // and send emails.
-//        this.actorSystem.scheduler().schedule(
-//                Duration.create(1, TimeUnit.SECONDS), // initialDelay
-//                Duration.create(30, TimeUnit.SECONDS), // interval
-//                () -> Request.crawl(mailerClient),
-//                this.executionContext
-//        );
+
+        // Amazon Crawler: starts after one minute and runs every 10 seconds until it runs out of titles to crawl.
+        this.actorSystem.scheduler().schedule(
+                Duration.create(10, TimeUnit.SECONDS), // initialDelay
+                Duration.create(10, TimeUnit.SECONDS), // interval
+                () -> Amazon.crawl(),
+                this.executionContext
+        );
+
+        // Request Crawler: 30 minutes later run requester service crawl and
+        // and send emails.
+        this.actorSystem.scheduler().schedule(
+                Duration.create(5, TimeUnit.MINUTES), // initialDelay
+                Duration.create(24, TimeUnit.HOURS), // interval
+                () -> Request.crawl(mailerClient),
+                this.executionContext
+        );
     }
 
 

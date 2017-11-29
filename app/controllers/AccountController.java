@@ -49,18 +49,6 @@ public class AccountController {
             subscriptionInfo.put("name", service.name);
             subscribedServices.add(subscriptionInfo);
         }
-
-
-
-
-//        try{
-//            JsonContext json = Ebean.json();
-//            String jsonOutput = json.toJson(userList);
-//            Logger.debug("########" + jsonOutput);
-//        }catch(Exception ex){
-//            Logger.debug("@@@@@@@@@@@@badthings");
-//        }
-
         return ok(account.render(requestList,usr,subscribedServices));
     }
 
@@ -117,11 +105,11 @@ public class AccountController {
     }
 
     public Result changeRequest(){
-        Map<String,String[]> formData = request().body().asFormUrlEncoded(); Logger.debug("formData: ", formData.toString());
+        Map<String,String[]> formData = request().body().asFormUrlEncoded();
 
-        String titleId = (formData.get("titleId")[0]); Logger.debug("titleId: ", titleId);
-        String userId = (formData.get("userId")[0]); Logger.debug("userID: ", userId);
-        String action = formData.get("action")[0]; Logger.debug("action: ", action);
+        String titleId = (formData.get("titleId")[0]);
+        String userId = (formData.get("userId")[0]);
+        String action = formData.get("action")[0];
         Boolean requested = false;
         if(action.equals("add")){
             Request request = new Request();

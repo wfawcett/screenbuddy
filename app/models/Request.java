@@ -26,9 +26,7 @@ public class Request extends Model {
     // after insert we will create one requestService for each service the user has
     @PostPersist
     public void registerRequestService(){
-        Logger.debug("Starting post persist" + this.id);
         List<UserService> userServices = this.user.userServices;
-        Logger.debug("userserviceLength: " + userServices.size());
         for(UserService userService : userServices){
             Service service = userService.service;
             RequestService requestService = new RequestService();
@@ -39,31 +37,34 @@ public class Request extends Model {
         }
     }
 
-    public static HashMap<User,HashMap<Title,List<Service>>> getMovieUpdates(){
+    public static HashMap<User,HashMap<Title,List<RequestService>>> getMovieUpdates(){
         List<RequestService> requestServices = RequestService.find.query().where().eq("complete", false).findList();
 
-        HashMap<User,HashMap<Title,List<Service>>> userTitleMap = new HashMap<User,HashMap<Title,List<Service>>>();
-        HashMap<Title,List<Service>> titleServiceMap = new HashMap<Title,List<Service>>();
-
+        HashMap<User,HashMap<Title,List<RequestService>>> userTitleMap = new HashMap<User,HashMap<Title,List<RequestService>>>();
+        HashMap<Title,List<RequestService>> titleServiceMap = new HashMap<Title,List<RequestService>>();
+        List<RequestService> availableServices = new ArrayList<>();
         for(RequestService requestService : requestServices){
             User user = requestService.request.user;
             Title title = requestService.request.title;
 
-            List<Service> availableServices = new ArrayList<>();
-            for(UserService userService : user.userServices){
-                if(userService.service.name.equals("Redbox") && Redbox.isAvailable(title)){
-                    availableServices.add(userService.service);
-                }
-
-                if(userService.service.name.equals("Amazon") && Amazon.isAvailable(title)){
-                    availableServices.add(userService.service);
-                }
+            if(requestService.service.name.equals("Redbox") && Redbox.isAvailable(title)){
+                Redbox redbox = Redbox.get(title);
+                Logger.debug("adding " +redbox.title.originalTitle + " to redbox availability ");
+                requestService.url = redbox.url;
+                availableServices.add(requestService);
             }
+
+            if(requestService.service.name.equals("Amazon") && Amazon.isAvailable(title)){
+                Amazon amazon = Amazon.get(title);
+                Logger.debug("adding " +amazon.title.originalTitle + " to amazon availability ");
+                requestService.url = amazon.url;
+                availableServices.add(requestService);
+            }
+
             if(availableServices.size() > 0){
+                Logger.debug("availableServices size: " + availableServices.size());
                 titleServiceMap.put(title, availableServices); // Title: [Service1, Service2]
                 userTitleMap.put(user, titleServiceMap);
-                requestService.complete = true;
-                requestService.update();
             }
         }
         return userTitleMap;
@@ -73,10 +74,10 @@ public class Request extends Model {
     public static final Finder<Long, Request> find = new Finder<>(Request.class);
 
     public static void crawl(MailerClient mailerClient){
-        HashMap<User,HashMap<Title,List<Service>>> userTitleMap = getMovieUpdates();
+        HashMap<User,HashMap<Title,List<RequestService>>> userTitleMap = getMovieUpdates();
         // now there should be a map of users with their available movies loaded into it.
         for(User user: userTitleMap.keySet()){
-            Map<Title,List<Service>> movieInfo = userTitleMap.get(user);
+            Map<Title,List<RequestService>> movieInfo = userTitleMap.get(user);
             List<Title> titles = new ArrayList<Title>(movieInfo.keySet());
             String subject;
             if(titles.size() == 1){

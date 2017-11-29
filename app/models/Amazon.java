@@ -28,6 +28,8 @@ public class Amazon extends Model {
     @ManyToOne(optional = false)
     public Service service;
 
+    public String url;
+
     @PrePersist
     public void getServiceId(){
         Service service = Service.find.query().where().eq("name", "Amazon").findOne();
@@ -48,11 +50,17 @@ public class Amazon extends Model {
 
     public static Boolean isAvailable(Title title){
         Boolean available = false;
-        Amazon amazon = Amazon.find.query().where().eq("title", title).findOne();
+        Amazon amazon = Amazon.get(title);
         if(amazon != null && amazon.available == true){
             available = true;
+
         }
+        Logger.debug("isAvailable(" + title.originalTitle + "): " + available);
         return available;
+    }
+
+    public static Amazon get(Title title){
+        return Amazon.find.query().where().eq("title", title).findOne();
     }
 
     public static void crawl(){
@@ -87,17 +95,19 @@ public class Amazon extends Model {
         if(nextTitle != null){
             AmazonSearchController amazonSearchController = new AmazonSearchController();
 
-            Boolean isAvailable = amazonSearchController.isTitleAvailableOnAmazon(nextTitle);
-
+            String amazonUrl = amazonSearchController.getAmazonUrl(nextTitle);
+            boolean isAvailable = amazonUrl != null;
             Amazon amazon = Amazon.find.query().where().eq("title_id", nextTitle.id).findOne();
             if(amazon == null){
                 amazon = new Amazon();
                 amazon.title = nextTitle;
                 amazon.lastChecked = new Date();
                 amazon.available = isAvailable;
+                amazon.url = amazonUrl;
                 amazon.insert();
             }else{
                 amazon.available = isAvailable;
+                amazon.url = amazonUrl;
                 amazon.update();
             }
         }

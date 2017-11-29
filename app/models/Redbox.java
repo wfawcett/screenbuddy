@@ -1,6 +1,7 @@
 package models;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import controllers.SecondaryController;
 import helpers.Levenshtein;
 import io.ebean.*;
@@ -54,23 +55,29 @@ public class Redbox extends Model {
     }
 
     public String titleName;
+    public String url;
 
     public static final Finder<Long, Redbox>  find = new Finder<>(Redbox.class);
 
     public static Boolean isAvailable(Title title){
         Boolean available = false;
-        Redbox redbox = Redbox.find.query().where().eq("title", title).findOne();
+        Redbox redbox = Redbox.get(title);
         if(redbox != null && redbox.soon == false){
             available = true;
         }
         return available;
     }
 
-    public static void titleLinker(WSClient ws, int maxRows){
+    public static Redbox get(Title title){
+        return Redbox.find.query().where().eq("title", title).findOne();
+    }
+
+    public static void titleLinker(WSClient ws, int maxRows, int lookbackAge){
+        int lookbackInt = lookbackAge * -1;
         Logger.debug("######## running titleLinker ########");
         // get all the title_id null records:
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.MINUTE, -5);
+        cal.add(Calendar.MINUTE, lookbackInt);
         Date lookback = cal.getTime();
 
         List<Redbox> redboxes = Redbox.find.query().where()
@@ -79,10 +86,11 @@ public class Redbox extends Model {
                     .lt("last_seen", lookback).eq("last_seen", null)
                 .endOr()
                 .setMaxRows(maxRows)
+                .orderBy("last_seen")
                 .findList();
         for(Redbox redbox : redboxes){
-            String cleanName = redbox.titleName.replaceAll("\\([^\\)]*\\)", ""); // strip the (2017) style dates from titles.
-            cleanName = StringEscapeUtils.escapeEcmaScript(redbox.titleName); // escape illegal characters.
+            redbox.lastSeen = new Date(); // no matter what happens we should update the date.
+            String cleanName = StringEscapeUtils.escapeEcmaScript(redbox.titleName); // escape illegal characters.
             Boolean dbMatchFound = false;
 
             // A bit tricky: use the full text index to find a title that is similar to the redbox title.
@@ -103,16 +111,20 @@ public class Redbox extends Model {
                         .findOne();
                 if(score != null){
                     String existingId = score.getString("id");
-                    Title title = Title.find.byId(Long.valueOf(existingId));
-                    redbox.title = title;
-                    redbox.lastSeen = new Date();
-                    dbMatchFound = true;
+                    int existingMappings = Redbox.find.query().where().eq("title_id", existingId).findCount();
+                    if(existingMappings == 0){ // only map it if there are no other redbox titles with this id.
+                        Title title = Title.find.byId(Long.valueOf(existingId));
+                        redbox.title = title;
+                        dbMatchFound = true;
+                    }else{
+                        dbMatchFound = false;
+                    }
                     redbox.save();
                 }
             }
 
             // The database match failed so we need to go out to TMDB to get the data.
-            if(dbMatchFound == false) { // need to go to tmdb to get the info.
+            if(!dbMatchFound) { // need to go to tmdb to get the info.
                 Logger.debug("Getting data from tmdb for: " + redbox.titleName);
                 cleanName = redbox.titleName.replaceAll("\\([^\\)]*\\)", "");
                 SecondaryController.searchTmdb(ws, cleanName)
@@ -128,7 +140,6 @@ public class Redbox extends Model {
                             Logger.debug("calling tmdb with id: " + topResultId);
                             return Title.asyncGetFromApiById(topResultId, ws)
                                     .thenApply((newTitle) -> {
-                                        Logger.debug("Got titledata from TMDB");
                                         redbox.title = newTitle;
                                         redbox.save();
                                         return newTitle;
@@ -143,24 +154,40 @@ public class Redbox extends Model {
         Logger.debug("######## running redbox crawl ########");
         ws.url("http://www.redbox.com/api/product/js/__titles").get()
                 .thenApply((response)->{
-                    String body = response.getBody();
-                    body = body.replace("var __titles = ", "");
-                    JsonNode titleData = Json.parse(body);
-                    for(JsonNode title : titleData){
-                        Logger.debug("--- got a title: " + title.get("sortName").asText());
-                        // productType 1 = movie, 5 = video game
-                        // fmt 1 = dvd, 2 = blu-ray (blu-ray sometimes adds blu ray to the title, or sortName, so ignore them);
-                        // soon = 1 means it isn't available yet. so ignore it.
-                        if(title.get("productType").asText().equals("1") && title.get("fmt").asText().equals("1") && title.get("soon").asText().equals("0")){
-                            String resultTitle = title.get("sortName").asText();
-                            Redbox redbox = Redbox.find.query().where().eq("titleName", resultTitle).findOne();
-                            if(redbox == null){redbox = new Redbox();} // if result was empty, start a new one.
-                            redbox.soon = title.get("soon").asBoolean();
-                            redbox.titleName = resultTitle;
-                            redbox.save();
+                    try{
+                        String body = response.getBody();
+                        body = body.replace("var __titles = ", "");
+                        JsonNode titleData = Json.parse(body);
+                        for(JsonNode title : titleData){
+                            String titleName = title.get("sortName").asText();
+                            String cleanName = titleName.replaceAll("\\([^\\)]*\\)", ""); // strip the (2017) style dates from titles.
+                            Logger.debug("--- got a title: " + titleName);
+                            // productType 1 = movie, 5 = video game
+                            // fmt 1 = dvd, 2 = blu-ray (blu-ray sometimes adds blu ray to the title, or sortName, so ignore them);
+                            // soon = 1 means it isn't available yet. so ignore it.
+                            Boolean notTelevision;
+                            try{
+                                String ratingPrefix = title.get("rating").asText().substring(0,2);
+                                notTelevision = ratingPrefix.equals("TV") == false;
+                            }catch(Exception ex){ // errors on R & G because it isn't 2 characters, should be a movie
+                                notTelevision = true;
+                            }
+
+                            if(title.get("productType").asText().equals("1") && title.get("fmt").asText().equals("1") && title.get("soon").asText().equals("0") && notTelevision){
+                                String resultTitle = title.get("sortName").asText();
+                                Redbox redbox = Redbox.find.query().where().eq("titleName", resultTitle).findOne();
+                                if(redbox == null){redbox = new Redbox();} // if result was empty, start a new one.
+                                redbox.soon = title.get("soon").asBoolean();
+                                redbox.titleName = resultTitle;
+                                redbox.url = "http://www.redbox.com/" + title.get("url").asText();
+                                redbox.save();
+                            }
                         }
+                        return response;
+                    }catch (Exception ex){
+                        Logger.error("Trouble in redbox crawler: ", ex);
+                        return null;
                     }
-                    return response;
                 });
     }
 }

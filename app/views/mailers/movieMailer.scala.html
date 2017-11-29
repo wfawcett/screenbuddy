@@ -1,4 +1,4 @@
-@(movieData: Map[Title, List[Service]])(user: User)(subject: String)
+@(movieData: Map[Title, List[RequestService]])(user: User)(subject: String)
 
 <style>
         body {
@@ -61,7 +61,7 @@
         <tr>
             <td class="pattern" width="600">
                 <table cellpadding="0" cellspacing="0">
-                    @for((title, services) <- movieData){
+                    @for((title, requestServices) <- movieData){
                         <tr class="row">
                             <td class="col" valign="top" width="600" style="padding-bottom: 20px;">
                                 <table cellpadding="0" cellspacing="0">
@@ -74,10 +74,12 @@
                                             <p style="padding-bottom: 10px; font-size: 14px;">
                                             @title.overview
                                             </p>
-                                            <strong style="line-height: 20px !important;">Available on: </strong>
-                                            @for(service <- services){
-                                                <div style="margin: 0px 5px">
-                                                    <img src="http://www.screenbuddy.net/assets/images/services/@service.logo" style="height:64px"/>
+                                            <strong style="line-height: 20px !important;">Available on: </strong><br/>
+                                            @for(requestService <- requestServices){
+                                                <div style="display: inline; margin: 0px 5px">
+                                                    <a href="@requestService.url">
+                                                        <img src="http://www.screenbuddy.net/assets/images/services/@requestService.service.logo" style="height:64px"/>
+                                                    </a>
                                                 </div>
                                             }
                                         </td>

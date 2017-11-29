@@ -9,6 +9,7 @@ create table amazon (
   last_checked                  datetime(6),
   available                     tinyint(1) default 0,
   service_id                    bigint not null,
+  url                           varchar(255),
   constraint pk_amazon primary key (id)
 );
 
@@ -19,6 +20,7 @@ create table redbox (
   soon                          tinyint(1) default 0,
   service_id                    bigint not null,
   title_name                    varchar(255),
+  url                           varchar(255),
   constraint pk_redbox primary key (id)
 );
 
@@ -34,6 +36,7 @@ create table request_service (
   request_id                    bigint not null,
   service_id                    bigint not null,
   complete                      tinyint(1) default 0,
+  url                           varchar(255),
   constraint pk_request_service primary key (id)
 );
 
