@@ -72,6 +72,17 @@ public class Request extends Model {
 
     public static final Finder<Long, Request> find = new Finder<>(Request.class);
 
+    public static void markComplete(Map<Title,List<RequestService>> movieInfo){
+        for(Title title : movieInfo.keySet()){
+            Logger.debug("Marking complete: " + title.originalTitle);
+            for(RequestService requestService : movieInfo.get(title)){
+                requestService.complete = true;
+                requestService.save();
+                Logger.debug("complete: " + requestService.id);
+            }
+        }
+    }
+
     public static void crawl(MailerClient mailerClient){
         HashMap<User,HashMap<Title,List<RequestService>>> userTitleMap = getMovieUpdates();
         // now there should be a map of users with their available movies loaded into it.
@@ -91,6 +102,7 @@ public class Request extends Model {
                     .setFrom("buddy@screenbuddy.net")
                     .setBodyHtml(views.html.mailers.movieMailer.render(movieInfo, user, subject).body());
             mailerClient.send(email);
+            markComplete(movieInfo);
         }
     }
 
